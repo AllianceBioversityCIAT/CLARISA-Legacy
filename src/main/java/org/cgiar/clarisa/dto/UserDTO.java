@@ -13,54 +13,72 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.dto;
-
 /**************
- * @author German C. Martinez - CIAT/CCAFS
+ * @author Diego Perez - Alliance Bioversity/CIAT
  **************/
 
-public class InstitutionTypeDTO extends BaseDTO {
-
-  private RepIndOrganizationTypeDTO organizationTypeDTO;
-  private String name;
-  private String acronym;
-  private Boolean subDepartmentActive;
+package org.cgiar.clarisa.dto;
 
 
-  public InstitutionTypeDTO() {
+public class UserDTO extends BaseDTO {
+
+  private String firstName;
+
+  private String lastName;
+
+  private String userName;
+
+  private String email;
+
+  private Boolean isActive;
+
+
+  public String getEmail() {
+    return email;
   }
 
 
-  public String getAcronym() {
-    return acronym;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public RepIndOrganizationTypeDTO getOrganizationTypeDTO() {
-    return organizationTypeDTO;
-  }
-
-  public Boolean getSubDepartmentActive() {
-    return subDepartmentActive;
+  public String getFirstName() {
+    return firstName;
   }
 
 
-  public void setAcronym(String acronym) {
-    this.acronym = acronym;
+  public Boolean getIsActive() {
+    return isActive;
   }
 
-  public void setName(String name) {
-    this.name = name;
+
+  public String getLastName() {
+    return lastName;
   }
 
-  public void setOrganizationTypeDTO(RepIndOrganizationTypeDTO organizationTypeDTO) {
-    this.organizationTypeDTO = organizationTypeDTO;
+
+  public String getUserName() {
+    return userName;
   }
 
-  public void setSubDepartmentActive(Boolean subDepartmentActive) {
-    this.subDepartmentActive = subDepartmentActive;
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+
+  public void setIsActive(Boolean isActive) {
+    this.isActive = isActive;
+  }
+
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+
+  public void setUserName(String userName) {
+    this.userName = userName;
   }
 }
