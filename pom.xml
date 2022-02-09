@@ -13,6 +13,7 @@
 	<version>1</version>
 	<name>CLARISA</name>
 	<description>CGIAR Level Agricultural Results Interoperable System Architecture</description>
+	<packaging>war</packaging>
 	<properties>
 		<java.version>1.8</java.version>
 		<com.github.java-json-tools.version>1.12</com.github.java-json-tools.version>
@@ -127,6 +128,7 @@
 
   </repositories>
 	<build>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.asciidoctor</groupId>
