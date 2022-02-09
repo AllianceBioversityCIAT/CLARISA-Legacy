@@ -35,6 +35,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -51,6 +52,9 @@ public class LoginController {
   private static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
 
   private UserManager userManager;
+  // private ConfigurableEnvironment env;
+  @Value("${spring.profiles.active}")
+  private String profile;
 
   @Inject
   public LoginController(UserManager userManager) {
@@ -83,14 +87,11 @@ public class LoginController {
             LDAPService service = null;
             LDAPUser ldapUser = null;
             // validate if you are on production.
-            if (true) {
+            if (profile.equals("local")) {
               service = new LDAPService(true);
+            } else {
+              service = new LDAPService(false);
             }
-            /*
-             * else {
-             * service = new LDAPService(true);
-             * }
-             */
             ldapUser = service.searchUserByEmail(userEmail);
             con = service.authenticateUser(ldapUser.getLogin(), newUserAuthenticationDTO.getPassword());
             if (con != null) {
