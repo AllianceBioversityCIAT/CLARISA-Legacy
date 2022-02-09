@@ -13,35 +13,39 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.manager;
-
-import org.cgiar.clarisa.model.SoftDeleteableEntity;
-
-import java.util.Objects;
-
 /**************
- * Generic manager, but for soft-deleteable entities.
- * 
- * @author German C. Martinez - CIAT/CCAFS
- * @param <T> class targeted by this manager
- * @param <Long> the class of the identifier for the class
+ * @author Diego Perez - Alliance Bioversity/CIAT
  **************/
 
-public interface GenericSoftDeleteableManager<T extends SoftDeleteableEntity> extends GenericManager<T> {
+package org.cgiar.clarisa.dto;
 
-  @Override
-  public default void delete(T entity) throws RuntimeException {
-    Objects.requireNonNull(entity);
-    this.deleteById(entity.getId());
+public class RoleDTO extends SimpleDTO {
+
+
+  private String description;
+
+
+  private String acronym;
+
+
+  public String getAcronym() {
+    return acronym;
   }
 
-  @Override
-  public default void deleteById(Long id) throws RuntimeException {
-    this.validateId(id, null);
 
-    T entity = this.findById(id).get();
-    entity.setActive(false);
-
-    this.update(entity);
+  public String getDescription() {
+    return description;
   }
+
+
+  public void setAcronym(String acronym) {
+    this.acronym = acronym;
+  }
+
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+
 }

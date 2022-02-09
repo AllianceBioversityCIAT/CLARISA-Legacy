@@ -13,35 +13,16 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.manager;
-
-import org.cgiar.clarisa.model.SoftDeleteableEntity;
-
-import java.util.Objects;
-
 /**************
- * Generic manager, but for soft-deleteable entities.
- * 
- * @author German C. Martinez - CIAT/CCAFS
- * @param <T> class targeted by this manager
- * @param <Long> the class of the identifier for the class
+ * @author Diego Perez - Alliance Bioversity/CIAT
  **************/
 
-public interface GenericSoftDeleteableManager<T extends SoftDeleteableEntity> extends GenericManager<T> {
+package org.cgiar.clarisa.dao;
 
-  @Override
-  public default void delete(T entity) throws RuntimeException {
-    Objects.requireNonNull(entity);
-    this.deleteById(entity.getId());
-  }
+import org.cgiar.clarisa.model.Role;
 
-  @Override
-  public default void deleteById(Long id) throws RuntimeException {
-    this.validateId(id, null);
+import org.springframework.data.jpa.repository.JpaRepository;
 
-    T entity = this.findById(id).get();
-    entity.setActive(false);
+public interface RoleDAO extends JpaRepository<Role, Long> {
 
-    this.update(entity);
-  }
 }

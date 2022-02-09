@@ -1,6 +1,6 @@
 /*****************************************************************
  * This file is part of CGIAR Level Agricultural Results
- * Interoperable System Architecture Platform (CLARISA).
+ * Interoperable System Architecture Platform (MARLO).
  * CLARISA is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,35 +13,31 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.manager;
-
-import org.cgiar.clarisa.model.SoftDeleteableEntity;
-
-import java.util.Objects;
-
 /**************
- * Generic manager, but for soft-deleteable entities.
- * 
- * @author German C. Martinez - CIAT/CCAFS
- * @param <T> class targeted by this manager
- * @param <Long> the class of the identifier for the class
+ * @author Diego Perez - Alliance Bioversity/CIAT
  **************/
 
-public interface GenericSoftDeleteableManager<T extends SoftDeleteableEntity> extends GenericManager<T> {
+package org.cgiar.clarisa.mapper;
+
+import org.cgiar.clarisa.dto.SimpleDTO;
+import org.cgiar.clarisa.dto.UserDTO;
+import org.cgiar.clarisa.model.User;
+
+import org.mapstruct.Context;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
+
+@Mapper(componentModel = "jsr330")
+public interface UserMapper extends SimpleBaseMapper<User, UserDTO> {
 
   @Override
-  public default void delete(T entity) throws RuntimeException {
-    Objects.requireNonNull(entity);
-    this.deleteById(entity.getId());
-  }
+  @Mappings({@Mapping(target = "name", expression = "java(entity.getComposedName())"),
+    @Mapping(target = "isActive", source = "active")})
+  public UserDTO entityToDto(User entity);
+
 
   @Override
-  public default void deleteById(Long id) throws RuntimeException {
-    this.validateId(id, null);
-
-    T entity = this.findById(id).get();
-    entity.setActive(false);
-
-    this.update(entity);
-  }
+  @Mappings({@Mapping(target = "name", expression = "java(entity.getComposedName())")})
+  public SimpleDTO entityToSimpleDto(User entity, @Context Object dummy);
 }

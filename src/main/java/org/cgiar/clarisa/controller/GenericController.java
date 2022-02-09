@@ -69,8 +69,9 @@ public interface GenericController<ENTITY extends ClarisaBaseEntity, DTO extends
   }
 
   @DeleteMapping(value = "/delete/{id}")
-  public default void deleteById(@PathVariable("id") Long id) {
+  public default ResponseEntity<Boolean> deleteById(@PathVariable("id") Long id) {
     this.getManager().deleteById(id);
+    return ResponseEntity.ok(!this.getManager().existsById(id));
   }
 
   @GetMapping(value = "/exists/{id}")

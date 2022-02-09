@@ -1,6 +1,6 @@
 /*****************************************************************
  * This file is part of CGIAR Level Agricultural Results
- * Interoperable System Architecture Platform (MARLO).
+ * Interoperable System Architecture Platform (CLARISA).
  * CLARISA is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,85 +14,30 @@
  *****************************************************************/
 
 /**************
- * @author Diego Perez - Alliance Bioversity/CIAT
+ * @author Diego Perez - CIAT/CCAFS
  **************/
 
 package org.cgiar.clarisa.dto;
 
 
-public class NewUserDTO extends BaseDTO {
-
-  private String firstName;
-
-  private String lastName;
-
-  private String userName;
-
-  private String password;
+public class NewUserAuthenticationDTO {
 
   private String email;
-
-  private Boolean isActive;
-
+  private String password;
 
   public String getEmail() {
     return email;
   }
 
-
-  public String getFirstName() {
-    return firstName;
-  }
-
-
-  public Boolean getIsActive() {
-    return isActive;
-  }
-
-
-  public String getLastName() {
-    return lastName;
-  }
-
-
   public String getPassword() {
     return password;
   }
-
-
-  public String getUserName() {
-    return userName;
-  }
-
 
   public void setEmail(String email) {
     this.email = email;
   }
 
-
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
-
-
-  public void setIsActive(Boolean isActive) {
-    this.isActive = isActive;
-  }
-
-
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
-
-
   public void setPassword(String password) {
     this.password = password;
   }
-
-
-  public void setUserName(String userName) {
-    this.userName = userName;
-  }
-
-
 }

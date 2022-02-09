@@ -17,6 +17,7 @@ package org.cgiar.clarisa.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -59,10 +60,13 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
 
   private Date lastLogin;
 
+
   // private Set<UserRole> userRoles = new HashSet<UserRole>(0);
+
 
   public User() {
   }
+
 
   @Override
   public boolean equals(Object obj) {
@@ -86,8 +90,14 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
     return true;
   }
 
+  @Column(name = "agree_terms")
   public Boolean getAgreeTerms() {
     return BooleanUtils.isTrue(agreeTerms);
+  }
+
+  @Column(name = "is_cgiar_user")
+  public boolean getCgiarUser() {
+    return cgiarUser;
   }
 
   /**
@@ -129,26 +139,33 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
     return this.getLastName() + ", " + this.getFirstName();
   }
 
+  @Column
   public String getEmail() {
     return this.email;
   }
 
+  @Column(name = "first_name")
   public String getFirstName() {
     return this.firstName;
   }
 
+
+  @Column(name = "last_login")
   public Date getLastLogin() {
     return this.lastLogin;
   }
 
+  @Column(name = "last_name")
   public String getLastName() {
     return this.lastName;
   }
 
+  @Column
   public String getPassword() {
     return this.password;
   }
 
+  @Column
   public String getUsername() {
     return this.username;
   }
@@ -161,18 +178,15 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
     return result;
   }
 
+  @Column(name = "auto_save")
   public boolean isAutoSave() {
     return autoSave;
   }
 
-  public boolean isCgiarUser() {
-    return cgiarUser;
-  }
-
-
   public void setAgreeTerms(Boolean agreeTerms) {
     this.agreeTerms = agreeTerms;
   }
+
 
   public void setAutoSave(boolean autoSave) {
     this.autoSave = autoSave;
@@ -190,6 +204,7 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
     this.firstName = firstName;
   }
 
+
   public void setLastLogin(Date lastLogin) {
     this.lastLogin = lastLogin;
   }
@@ -205,6 +220,7 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
   public void setUsername(String username) {
     this.username = username;
   }
+
 
   @Override
   public String toString() {

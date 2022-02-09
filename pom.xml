@@ -18,6 +18,7 @@
 		<com.github.java-json-tools.version>1.12</com.github.java-json-tools.version>
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
 		<javax.inject.version>1</javax.inject.version>
+		<ciat-adauth.version>2.3</ciat-adauth.version>
 	</properties>
 	<dependencies>
 		<!-- Start dependencies -->
@@ -109,9 +110,22 @@
 			<artifactId>spring-restdocs-mockmvc</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+      <groupId>org.cgiar.ciat.auth</groupId>
+      <artifactId>adauth</artifactId>
+      <version>${ciat-adauth.version}</version>
+    </dependency>
 		<!-- Boot dependencies -->
 	</dependencies>
+  <repositories>
+    <repository>
+      <id>Internal project repo</id>
+      <url>file://${basedir}/src/main/resources/libs/</url>
+    </repository>
 
+    <!-- Maven repo -->
+
+  </repositories>
 	<build>
 		<plugins>
 			<plugin>

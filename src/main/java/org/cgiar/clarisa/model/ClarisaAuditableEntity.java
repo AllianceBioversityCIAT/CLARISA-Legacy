@@ -48,7 +48,7 @@ public abstract class ClarisaAuditableEntity extends SoftDeleteableEntity implem
   @Expose
   private User modifiedBy;
 
-  @Column(name = "active_since")
+  @Column(name = "active_since", insertable = false, updatable = false)
   public Date getActiveSince() {
     return this.activeSince;
   }
@@ -72,7 +72,7 @@ public abstract class ClarisaAuditableEntity extends SoftDeleteableEntity implem
 
 
   public void setActiveSince(Date activeSince) {
-    this.activeSince = activeSince;
+    this.activeSince = activeSince == null ? new Date() : activeSince;
   }
 
   public void setCreatedBy(User createdBy) {

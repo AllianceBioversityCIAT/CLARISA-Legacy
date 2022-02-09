@@ -20,17 +20,17 @@
 package org.cgiar.clarisa.dto;
 
 
-public class UserDTO extends BaseDTO {
+public class UserDTO extends SimpleDTO {
 
   private String firstName;
 
   private String lastName;
 
-  private String userName;
+  private String username;
 
   private String email;
 
-  private Boolean isActive;
+  private boolean isActive;
 
 
   public String getEmail() {
@@ -43,7 +43,7 @@ public class UserDTO extends BaseDTO {
   }
 
 
-  public Boolean getIsActive() {
+  public boolean getIsActive() {
     return isActive;
   }
 
@@ -53,8 +53,8 @@ public class UserDTO extends BaseDTO {
   }
 
 
-  public String getUserName() {
-    return userName;
+  public String getUsername() {
+    return username;
   }
 
 
@@ -68,7 +68,7 @@ public class UserDTO extends BaseDTO {
   }
 
 
-  public void setIsActive(Boolean isActive) {
+  public void setIsActive(boolean isActive) {
     this.isActive = isActive;
   }
 
@@ -78,7 +78,7 @@ public class UserDTO extends BaseDTO {
   }
 
 
-  public void setUserName(String userName) {
-    this.userName = userName;
+  public void setUsername(String username) {
+    this.username = username;
   }
 }
