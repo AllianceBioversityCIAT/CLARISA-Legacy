@@ -19,6 +19,7 @@
 
 package org.cgiar.clarisa.dto;
 
+import java.util.List;
 
 public class UserDTO extends SimpleDTO {
 
@@ -31,6 +32,8 @@ public class UserDTO extends SimpleDTO {
   private String email;
 
   private boolean isActive;
+
+  private List<RoleDTO> roleList;
 
 
   public String getEmail() {
@@ -50,6 +53,11 @@ public class UserDTO extends SimpleDTO {
 
   public String getLastName() {
     return lastName;
+  }
+
+
+  public List<RoleDTO> getRoleList() {
+    return roleList;
   }
 
 
@@ -75,6 +83,11 @@ public class UserDTO extends SimpleDTO {
 
   public void setLastName(String lastName) {
     this.lastName = lastName;
+  }
+
+
+  public void setRoleList(List<RoleDTO> roleList) {
+    this.roleList = roleList;
   }
 
 
