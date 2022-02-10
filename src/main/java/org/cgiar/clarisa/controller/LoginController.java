@@ -82,11 +82,11 @@ public class LoginController {
         if (userlogged.getCgiarUser()) {
           // try LDPA authentication
           try {
-            System.out.println("Authentication");
+            LOG.info("Trying Authentication...");
             ADConexion con = null;
             LDAPService service = null;
             LDAPUser ldapUser = null;
-            // validate if you are on production.
+            // TODO change to validate if you are on production.
             if (profile.equals("local")) {
               service = new LDAPService(true);
             } else {
