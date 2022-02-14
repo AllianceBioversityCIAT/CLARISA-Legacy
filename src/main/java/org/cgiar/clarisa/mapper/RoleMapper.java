@@ -22,6 +22,7 @@ package org.cgiar.clarisa.mapper;
 import org.cgiar.clarisa.dto.RoleDTO;
 import org.cgiar.clarisa.dto.SimpleDTO;
 import org.cgiar.clarisa.model.Role;
+import org.cgiar.clarisa.model.UserRole;
 
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
@@ -38,4 +39,22 @@ public interface RoleMapper extends SimpleBaseMapper<Role, RoleDTO> {
   @Override
   @Mappings({@Mapping(target = "name", expression = "java(entity.getComposedName())")})
   public SimpleDTO entityToSimpleDto(Role entity, @Context Object dummy);
+
+
+  public default RoleDTO userRoleToRoleDTO(UserRole userRole) {
+    if (userRole == null) {
+      return null;
+    }
+
+    RoleDTO roleDTO = new RoleDTO();
+
+    roleDTO.setId(userRole.getRole().getId());
+    roleDTO.setDescription(userRole.getRole().getDescription());
+    roleDTO.setAcronym(userRole.getRole().getAcronym());
+
+    return roleDTO;
+
+  }
+
+
 }

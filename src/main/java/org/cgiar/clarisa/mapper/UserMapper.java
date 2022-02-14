@@ -28,12 +28,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "jsr330")
+@Mapper(componentModel = "jsr330", uses = {RoleMapper.class})
 public interface UserMapper extends SimpleBaseMapper<User, UserDTO> {
 
   @Override
   @Mappings({@Mapping(target = "name", expression = "java(entity.getComposedName())"),
-    @Mapping(target = "isActive", source = "active")})
+    @Mapping(target = "isActive", source = "active"), @Mapping(target = "roleList", source = "userRoles")})
   public UserDTO entityToDto(User entity);
 
 

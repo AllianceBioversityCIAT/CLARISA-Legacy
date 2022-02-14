@@ -16,16 +16,13 @@
 package org.cgiar.clarisa.model;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -67,10 +64,8 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
 
   private Date lastLogin;
 
-  private Set<Role> roles = new HashSet<>();
 
-
-  // private Set<UserRole> userRoles = new HashSet<UserRole>(0);
+  private List<UserRole> UserRoles;
 
 
   public User() {
@@ -176,16 +171,15 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
     return this.password;
   }
 
-  @ManyToMany(cascade = {CascadeType.ALL})
-  @JoinTable(name = "User_Roles", joinColumns = {@JoinColumn(name = "user_id")},
-    inverseJoinColumns = {@JoinColumn(name = "role_id")})
-  public Set<Role> getRoles() {
-    return roles;
-  }
 
   @Column
   public String getUsername() {
     return this.username;
+  }
+
+  @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "user")
+  public List<UserRole> getUserRoles() {
+    return UserRoles;
   }
 
   @Override
@@ -205,10 +199,10 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
     this.agreeTerms = agreeTerms;
   }
 
+
   public void setAutoSave(boolean autoSave) {
     this.autoSave = autoSave;
   }
-
 
   public void setCgiarUser(boolean cgiarUser) {
     this.cgiarUser = cgiarUser;
@@ -222,25 +216,28 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
     this.firstName = firstName;
   }
 
+
   public void setLastLogin(Date lastLogin) {
     this.lastLogin = lastLogin;
   }
-
 
   public void setLastName(String lastName) {
     this.lastName = lastName;
   }
 
+
   public void setPassword(String password) {
     this.password = password;
   }
 
-  public void setRoles(Set roles) {
-    this.roles = roles;
-  }
 
   public void setUsername(String username) {
     this.username = username;
+  }
+
+
+  public void setUserRoles(List<UserRole> userRoles) {
+    UserRoles = userRoles;
   }
 
 

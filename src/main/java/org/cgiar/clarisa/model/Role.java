@@ -75,6 +75,7 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     return this.acronym;
   }
 
+
   @Transient
   public String getComposedName() {
     if (this.getId() == null || this.getId() == -1) {
@@ -83,11 +84,11 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     return this.getAcronym() + ", " + this.getDescription();
   }
 
+
   @Column
   public String getDescription() {
     return this.description;
   }
-
 
   @Column
   public Integer getOrder() {
@@ -103,6 +104,7 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     return result;
   }
 
+
   public void setAcronym(String acronym) {
     this.acronym = acronym;
   }
@@ -111,10 +113,10 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     this.description = description;
   }
 
-
   public void setOrder(Integer order) {
     this.order = order;
   }
+
 
   @Override
   public String toString() {
