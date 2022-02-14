@@ -17,8 +17,11 @@ package org.cgiar.clarisa.model;
 // Generated May 17, 2016 9:53:46 AM by Hibernate Tools 4.3.1.Final
 
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -44,6 +47,8 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
   @Expose
   private Integer order;
 
+  // relations
+  private List<User> roleUsers;
 
   public Role() {
   }
@@ -84,7 +89,6 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     return this.getAcronym() + ", " + this.getDescription();
   }
 
-
   @Column
   public String getDescription() {
     return this.description;
@@ -93,6 +97,11 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
   @Column
   public Integer getOrder() {
     return order;
+  }
+
+  @ManyToMany(mappedBy = "userRoles")
+  public List<User> getRoleUsers() {
+    return roleUsers;
   }
 
 
@@ -115,6 +124,10 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
 
   public void setOrder(Integer order) {
     this.order = order;
+  }
+
+  public void setRoleUsers(List<User> roleUsers) {
+    this.roleUsers = roleUsers;
   }
 
 

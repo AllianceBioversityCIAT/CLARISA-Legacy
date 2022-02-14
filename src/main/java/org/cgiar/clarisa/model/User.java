@@ -18,11 +18,12 @@ package org.cgiar.clarisa.model;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -64,8 +65,8 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
 
   private Date lastLogin;
 
-
-  private List<UserRole> UserRoles;
+  // relations
+  private List<Role> userRoles;
 
 
   public User() {
@@ -177,9 +178,11 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
     return this.username;
   }
 
-  @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "user")
-  public List<UserRole> getUserRoles() {
-    return UserRoles;
+  @ManyToMany // (cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "role_id"))
+  public List<Role> getUserRoles() {
+    return userRoles;
   }
 
   @Override
@@ -236,8 +239,8 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
   }
 
 
-  public void setUserRoles(List<UserRole> userRoles) {
-    UserRoles = userRoles;
+  public void setUserRoles(List<Role> userRoles) {
+    this.userRoles = userRoles;
   }
 
 
