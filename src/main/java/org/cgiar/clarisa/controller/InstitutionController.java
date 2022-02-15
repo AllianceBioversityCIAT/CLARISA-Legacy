@@ -1,16 +1,16 @@
 /*****************************************************************
- * This file is part of Managing Agricultural Research for Learning &
- * Outcomes Platform (MARLO).
- * MARLO is free software: you can redistribute it and/or modify
+ * This file is part of CGIAR Level Agricultural Results
+ * Interoperable System Architecture (CLARISA).
+ * CLARISA is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * at your option) any later version.
- * MARLO is distributed in the hope that it will be useful,
+ * CLARISA is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
- * along with MARLO. If not, see <http://www.gnu.org/licenses/>.
+ * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
 package org.cgiar.clarisa.controller;
@@ -43,7 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/institution")
 @CrossOrigin(origins = {"http://localhost:4200", "http://127.0.0.1:4200"})
-public class InstitutionController implements GenericController<Institution, InstitutionDTO> {
+public class InstitutionController extends GenericController<Institution, InstitutionDTO> {
 
   // Logger
   private static final Logger LOG = LoggerFactory.getLogger(InstitutionController.class);
@@ -59,6 +59,7 @@ public class InstitutionController implements GenericController<Institution, Ins
 
   @Inject
   public InstitutionController(InstitutionManager manager, InstitutionMapper mapper) {
+    super(Institution.class);
     this.manager = manager;
     this.mapper = mapper;
   }

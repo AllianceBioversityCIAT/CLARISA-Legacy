@@ -1,6 +1,6 @@
 /*****************************************************************
  * This file is part of CGIAR Level Agricultural Results
- * Interoperable System Architecture Platform (CLARISA).
+ * Interoperable System Architecture (CLARISA).
  * CLARISA is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/roles")
 @CrossOrigin(origins = {"http://localhost:4200", "http://127.0.0.1:4200"})
-public class RoleController implements GenericController<Role, RoleDTO> {
+public class RoleController extends GenericController<Role, RoleDTO> {
 
   // Logger
   private static final Logger LOG = LoggerFactory.getLogger(RoleController.class);
@@ -56,7 +56,7 @@ public class RoleController implements GenericController<Role, RoleDTO> {
 
   @Inject
   public RoleController(RoleManager manager, RoleMapper mapper) {
-    super();
+    super(Role.class);
     this.manager = manager;
     this.mapper = mapper;
   }

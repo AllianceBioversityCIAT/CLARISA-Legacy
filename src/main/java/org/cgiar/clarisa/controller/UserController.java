@@ -19,6 +19,7 @@
 
 package org.cgiar.clarisa.controller;
 
+import org.cgiar.clarisa.dto.SimpleDTO;
 import org.cgiar.clarisa.dto.UserDTO;
 import org.cgiar.clarisa.manager.GenericManager;
 import org.cgiar.clarisa.manager.UserManager;
@@ -42,7 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(origins = {"http://localhost:4200", "http://127.0.0.1:4200"})
-public class UserController implements GenericController<User, UserDTO> {
+public class UserController extends GenericController<User, UserDTO> {
 
   // Logger
   private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
@@ -59,16 +60,15 @@ public class UserController implements GenericController<User, UserDTO> {
 
   @Inject
   public UserController(UserManager manager, UserMapper mapper) {
-    super();
+    super(User.class);
     this.manager = manager;
     this.mapper = mapper;
   }
 
-  @Override
-  @GetMapping(value = "/getAllUsersSimple")
-  public ResponseEntity<List<UserDTO>> findAll() {
+  @GetMapping(value = "/simple")
+  public ResponseEntity<List<SimpleDTO>> findAllSimple() {
     List<User> resultList = this.manager.findAll();
-    return ResponseEntity.ok(this.mapper.entityListToDtoList(resultList));
+    return ResponseEntity.ok(this.mapper.entityListToSimpleDtoList(resultList));
   }
 
 
@@ -90,7 +90,6 @@ public class UserController implements GenericController<User, UserDTO> {
 
   @Override
   public ObjectMapper getObjectMapper() {
-
     return this.objectMapper;
   }
 }

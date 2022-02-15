@@ -1,16 +1,16 @@
 /*****************************************************************
- * This file is part of Managing Agricultural Research for Learning &
- * Outcomes Platform (MARLO).
- * MARLO is free software: you can redistribute it and/or modify
+ * This file is part of CGIAR Level Agricultural Results
+ * Interoperable System Architecture (CLARISA).
+ * CLARISA is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * at your option) any later version.
- * MARLO is distributed in the hope that it will be useful,
+ * CLARISA is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
- * along with MARLO. If not, see <http://www.gnu.org/licenses/>.
+ * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
 package org.cgiar.clarisa.exception;
@@ -34,7 +34,7 @@ public class EntityNotFoundException extends RuntimeException {
     super();
   }
 
-  public EntityNotFoundException(Class<?> clazz, String id) {
+  public EntityNotFoundException(Class<?> clazz, Long id) {
     this(String.format(CLASS_ENTITY_NOT_FOUND, clazz.getSimpleName(), id));
   }
 
