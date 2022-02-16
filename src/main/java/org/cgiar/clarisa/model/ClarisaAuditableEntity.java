@@ -24,6 +24,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
 
 /**
@@ -36,7 +37,6 @@ public abstract class ClarisaAuditableEntity extends SoftDeleteableEntity implem
 
   private static final long serialVersionUID = 9094997494834647630L;
 
-  @Expose
   private User createdBy;
 
   @Expose
@@ -45,7 +45,6 @@ public abstract class ClarisaAuditableEntity extends SoftDeleteableEntity implem
   @Expose
   private String modificationJustification;
 
-  @Expose
   private User modifiedBy;
 
   @Column(name = "active_since", insertable = false, updatable = false)
@@ -55,6 +54,7 @@ public abstract class ClarisaAuditableEntity extends SoftDeleteableEntity implem
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "created_by")
+  @JsonIgnore
   public User getCreatedBy() {
     return this.createdBy;
   }
@@ -66,6 +66,7 @@ public abstract class ClarisaAuditableEntity extends SoftDeleteableEntity implem
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "modified_by")
+  @JsonIgnore
   public User getModifiedBy() {
     return this.modifiedBy;
   }

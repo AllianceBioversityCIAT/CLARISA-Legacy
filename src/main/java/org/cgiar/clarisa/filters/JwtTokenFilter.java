@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,6 +44,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
+
+  // Logger
+  private static final Logger LOG = LoggerFactory.getLogger(JwtTokenFilter.class);
 
   private final JwtTokenUtils jwtTokenUtils;
 
@@ -65,7 +70,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     // Get jwt token and validate
     final String token = header.split(" ")[1].trim();
-    if (!jwtTokenUtils.validate(token)) {
+    boolean validToken = false;
+    try {
+      validToken = jwtTokenUtils.validate(token);
+    } catch (Exception e) {
+      LOG.warn(e.getMessage());
+    }
+
+    if (!validToken) {
       chain.doFilter(request, response);
       return;
     }

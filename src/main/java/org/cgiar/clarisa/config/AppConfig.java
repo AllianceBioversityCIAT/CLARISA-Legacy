@@ -46,6 +46,9 @@ public class AppConfig {
   @Value("${jwt.secret}")
   private String jwtSecret;
 
+  @Value("${jwt.validUntil}")
+  private Long jwtExpirationTime;
+
 
   public Integer getBcryptRounds() {
     if (bcryptRounds == null) {
@@ -58,6 +61,15 @@ public class AppConfig {
 
   public ApplicationContext getContext() {
     return context;
+  }
+
+  public Long getJwtExpirationTime() {
+    if (jwtExpirationTime == null) {
+      LOG.error("There is no JWT expiration time configured");
+      return null;
+    }
+
+    return jwtExpirationTime;
   }
 
   public String getJwtSecret() {

@@ -24,10 +24,14 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtParserBuilder;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
@@ -46,11 +50,11 @@ public class JwtTokenUtils {
   }
 
   public String generateJWTToken(User user) {
+    long now = System.currentTimeMillis();
     String token = this.getJwtBuilder().setId("test").setSubject(user.getEmail())
       .claim("authorities",
         user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-      .setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + 600000))
-      .compact();
+      .setIssuedAt(new Date(now)).setExpiration(new Date(now + this.appConfig.getJwtExpirationTime())).compact();
 
     return "Bearer " + token;
   }
@@ -68,13 +72,10 @@ public class JwtTokenUtils {
     return this.getJwtParserWithSecret().build().parseClaimsJws(token).getBody().getSubject();
   }
 
-  public boolean validate(String token) {
-    try {
-      this.getJwtParserWithSecret().build().parseClaimsJws(token);
-      return true;
-    } catch (Exception ex) {
-      return false;
-    }
+  public boolean validate(String token) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException,
+    SignatureException, IllegalArgumentException {
+    this.getJwtParserWithSecret().build().parseClaimsJws(token);
+    return true;
   }
 
 }
