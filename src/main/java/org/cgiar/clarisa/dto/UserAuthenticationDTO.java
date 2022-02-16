@@ -21,17 +21,15 @@ package org.cgiar.clarisa.dto;
 
 public class UserAuthenticationDTO extends BaseDTO {
 
-
   public String first_name;
-
 
   public String last_name;
 
-
   public String email;
 
-
   public boolean authenticated;
+
+  public String token;
 
   public String getEmail() {
     return email;
@@ -41,14 +39,18 @@ public class UserAuthenticationDTO extends BaseDTO {
     return first_name;
   }
 
-
   public String getLast_name() {
     return last_name;
+  }
+
+  public String getToken() {
+    return token;
   }
 
   public boolean isAuthenticated() {
     return authenticated;
   }
+
 
   public void setAuthenticated(boolean authenticated) {
     this.authenticated = authenticated;
@@ -62,9 +64,12 @@ public class UserAuthenticationDTO extends BaseDTO {
     this.first_name = first_name;
   }
 
-
   public void setLast_name(String last_name) {
     this.last_name = last_name;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
   }
 
 }

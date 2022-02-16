@@ -15,11 +15,14 @@
 
 package org.cgiar.clarisa.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -28,7 +31,11 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.google.gson.annotations.Expose;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.BooleanUtils;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
 /**
@@ -37,7 +44,7 @@ import org.apache.commons.lang3.BooleanUtils;
 @Entity
 @Table(name = "users")
 @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
-public class User extends ClarisaAuditableEntity implements java.io.Serializable, AuditLog<Long> {
+public class User extends ClarisaAuditableEntity implements java.io.Serializable, AuditLog<Long>, UserDetails {
 
   private static final long serialVersionUID = 3674438945983473335L;
 
@@ -102,6 +109,15 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
   }
 
 
+  @Override
+  @Transient
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    List<GrantedAuthority> currentRoles = new ArrayList<>();
+    ListUtils.emptyIfNull(this.getUserRoles())
+      .forEach(role -> currentRoles.add(new SimpleGrantedAuthority(role.getDescription())));
+    return currentRoles;
+  }
+
   @Column(name = "is_cgiar_user")
   public boolean getCgiarUser() {
     return cgiarUser;
@@ -161,24 +177,26 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
     return this.lastLogin;
   }
 
+
   @Column(name = "last_name")
   public String getLastName() {
     return this.lastName;
   }
 
 
+  @Override
   @Column
   public String getPassword() {
     return this.password;
   }
 
-
+  @Override
   @Column
   public String getUsername() {
     return this.username;
   }
 
-  @ManyToMany // (cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @ManyToMany(fetch = FetchType.EAGER/* , cascade = {CascadeType.PERSIST, CascadeType.MERGE} */)
   @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
   public List<Role> getUserRoles() {
@@ -193,27 +211,59 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
     return result;
   }
 
+  @Override
+  @Transient
+  public boolean isAccountNonExpired() {
+    // TODO create field on DB for this
+    return true;
+  }
+
+
+  @Override
+  @Transient
+  public boolean isAccountNonLocked() {
+    // TODO create field on DB for this
+    return true;
+  }
+
   @Column(name = "auto_save")
   public boolean isAutoSave() {
     return autoSave;
   }
 
+  @Override
+  @Transient
+  public boolean isCredentialsNonExpired() {
+    // TODO create field on DB for this
+    return true;
+  }
+
+  @Override
+  @Transient
+  public boolean isEnabled() {
+    // TODO either create field on DB for this or use is_active
+    return true;
+  }
+
+
   public void setAgreeTerms(Boolean agreeTerms) {
     this.agreeTerms = agreeTerms;
   }
-
 
   public void setAutoSave(boolean autoSave) {
     this.autoSave = autoSave;
   }
 
+
   public void setCgiarUser(boolean cgiarUser) {
     this.cgiarUser = cgiarUser;
   }
 
+
   public void setEmail(String email) {
     this.email = email;
   }
+
 
   public void setFirstName(String firstName) {
     this.firstName = firstName;
@@ -223,6 +273,7 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
   public void setLastLogin(Date lastLogin) {
     this.lastLogin = lastLogin;
   }
+
 
   public void setLastName(String lastName) {
     this.lastName = lastName;

@@ -13,17 +13,37 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa;
+package org.cgiar.clarisa.exception;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
-@SpringBootApplication // (exclude = {SecurityAutoConfiguration.class})
-public class ClarisaApplication extends SpringBootServletInitializer {
+/**************
+ * @author German C. Martinez - Alliance Bioversity/CIAT
+ **************/
 
-  public static void main(String[] args) {
-    SpringApplication.run(ClarisaApplication.class, args);
+public class UserNotFoundException extends EntityNotFoundException {
+
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -119466582720265012L;
+
+  public static final String NOT_FOUND = "The user with username %s does not exist!";
+
+
+  public UserNotFoundException() {
+    super();
+  }
+
+  public UserNotFoundException(String username) {
+    super(String.format(NOT_FOUND, username));
+  }
+
+  public UserNotFoundException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
+  public UserNotFoundException(Throwable cause) {
+    super(cause);
   }
 
 }

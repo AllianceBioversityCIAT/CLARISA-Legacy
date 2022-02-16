@@ -23,6 +23,8 @@ import org.cgiar.clarisa.dao.UserDAO;
 import org.cgiar.clarisa.manager.UserManager;
 import org.cgiar.clarisa.model.User;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -52,8 +54,13 @@ public class UserManagerImpl implements UserManager {
   }
 
   @Override
-  public User getUserByEmail(String email) {
-    return this.userDao.getUserByEmail(email);
+  public String getEmailFromUsername(String username) {
+    return this.userDao.getEmailFromUsername(username);
+  }
+
+  @Override
+  public Optional<User> getUserByUsername(String username) {
+    return this.userDao.getUserByUsername(username);
   }
 
 }

@@ -21,8 +21,12 @@ package org.cgiar.clarisa.manager;
 
 import org.cgiar.clarisa.model.User;
 
+import java.util.Optional;
+
 public interface UserManager extends GenericManager<User> {
 
-  public User getUserByEmail(String email);
+  public String getEmailFromUsername(String username);
+
+  public Optional<User> getUserByUsername(String username);
 
 }

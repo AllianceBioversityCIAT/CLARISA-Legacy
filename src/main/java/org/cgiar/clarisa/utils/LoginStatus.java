@@ -13,17 +13,13 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa;
+package org.cgiar.clarisa.utils;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
-@SpringBootApplication // (exclude = {SecurityAutoConfiguration.class})
-public class ClarisaApplication extends SpringBootServletInitializer {
+/**************
+ * @author German C. Martinez - Alliance Bioversity/CIAT
+ **************/
 
-  public static void main(String[] args) {
-    SpringApplication.run(ClarisaApplication.class, args);
-  }
-
+public enum LoginStatus {
+  LOGGED_SUCCESSFULLY, WRONG_CREDENTIALS, NOT_LOGGED, LDAP_ERROR
 }

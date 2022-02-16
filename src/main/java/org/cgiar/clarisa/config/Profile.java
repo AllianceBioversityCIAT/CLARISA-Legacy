@@ -13,17 +13,35 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa;
+package org.cgiar.clarisa.config;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.apache.commons.lang3.StringUtils;
 
-@SpringBootApplication // (exclude = {SecurityAutoConfiguration.class})
-public class ClarisaApplication extends SpringBootServletInitializer {
+/**************
+ * @author German C. Martinez - Alliance Bioversity/CIAT
+ **************/
 
-  public static void main(String[] args) {
-    SpringApplication.run(ClarisaApplication.class, args);
+public enum Profile {
+
+  SPRING_PROFILE_DEVELOPMENT("dev"), SPRING_PROFILE_LOCAL("local"), SPRING_PROFILE_PRODUCTION("prod");
+
+  public static Profile getFromName(String name) {
+    for (Profile profile : Profile.values()) {
+      if (StringUtils.equalsIgnoreCase(name, profile.getName())) {
+        return profile;
+      }
+    }
+
+    return null;
   }
 
+  private final String name;
+
+  private Profile(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
+  }
 }

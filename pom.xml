@@ -20,6 +20,8 @@
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
 		<javax.inject.version>1</javax.inject.version>
 		<ciat-adauth.version>2.3</ciat-adauth.version>
+		<io.jsonwebtoken.version>0.11.2</io.jsonwebtoken.version>
+		<org.apache.commons.collections4.version>4.4</org.apache.commons.collections4.version>
 	</properties>
 	<dependencies>
 		<!-- Start dependencies -->
@@ -44,6 +46,33 @@
       <artifactId>javax.inject</artifactId>
       <version>${javax.inject.version}</version>
     </dependency>
+		<dependency>
+      <groupId>org.cgiar.ciat.auth</groupId>
+      <artifactId>adauth</artifactId>
+      <version>${ciat-adauth.version}</version>
+    </dependency>
+		<dependency>
+	    <groupId>io.jsonwebtoken</groupId>
+	    <artifactId>jjwt-api</artifactId>
+	    <version>${io.jsonwebtoken.version}</version>
+		</dependency>
+		<dependency>
+	    <groupId>io.jsonwebtoken</groupId>
+	    <artifactId>jjwt-impl</artifactId>
+	    <version>${io.jsonwebtoken.version}</version>
+	    <scope>runtime</scope>
+		</dependency>
+		<dependency>
+	    <groupId>io.jsonwebtoken</groupId>
+	    <artifactId>jjwt-gson</artifactId>
+	    <version>${io.jsonwebtoken.version}</version>
+	    <scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>${org.apache.commons.collections4.version}</version>
+		</dependency>
 		<!-- End dependencies -->
 		<!-- Boot dependencies -->
 		<dependency>
@@ -80,6 +109,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
@@ -107,21 +140,14 @@
 			<artifactId>spring-restdocs-mockmvc</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-      <groupId>org.cgiar.ciat.auth</groupId>
-      <artifactId>adauth</artifactId>
-      <version>${ciat-adauth.version}</version>
-    </dependency>
 		<!-- Boot dependencies -->
 	</dependencies>
+	
   <repositories>
     <repository>
       <id>Internal project repo</id>
       <url>file://${basedir}/src/main/resources/libs/</url>
     </repository>
-
-    <!-- Maven repo -->
-
   </repositories>
 	<build>
 		<finalName>${project.artifactId}</finalName>

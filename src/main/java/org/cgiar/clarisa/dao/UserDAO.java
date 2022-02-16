@@ -21,11 +21,16 @@ package org.cgiar.clarisa.dao;
 
 import org.cgiar.clarisa.model.User;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface UserDAO extends JpaRepository<User, Long> {
 
-  @Query("select u from User u where u.email= ?1")
-  public User getUserByEmail(String email);
+  @Query("select u.email from User u where u.username = ?1")
+  public String getEmailFromUsername(String username);
+
+  @Query("select u from User u where u.email = ?1 or u.username = ?1")
+  public Optional<User> getUserByUsername(String username);
 }

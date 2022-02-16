@@ -40,10 +40,6 @@ import org.springframework.core.env.ConfigurableEnvironment;
 @PropertySource({"classpath:config/clarisa-${spring.profiles.active:local}.properties"})
 public class CoreAppContextConfig {
 
-  public static final String SPRING_PROFILE_DEVELOPMENT = "dev";
-  public static final String SPRING_PROFILE_LOCAL = "local";
-  public static final String SPRING_PROFILE_PRODUCTION = "prod";
-
   @Bean
   public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
     return new PropertySourcesPlaceholderConfigurer();
@@ -58,23 +54,26 @@ public class CoreAppContextConfig {
   public void initApplication() {
     if (environment.getActiveProfiles().length == 0) {
       log.warn("No Spring profile configured, will default to dev");
-      environment.setActiveProfiles(SPRING_PROFILE_DEVELOPMENT);
+      environment.setActiveProfiles(Profile.SPRING_PROFILE_DEVELOPMENT.getName());
     } else {
       log.info("Running with Spring profile(s) : {}", Arrays.toString(environment.getActiveProfiles()));
       Collection<String> activeProfiles = Arrays.asList(environment.getActiveProfiles());
-      if (activeProfiles.contains(SPRING_PROFILE_DEVELOPMENT) && activeProfiles.contains(SPRING_PROFILE_PRODUCTION)) {
+      if (activeProfiles.contains(Profile.SPRING_PROFILE_DEVELOPMENT.getName())
+        && activeProfiles.contains(Profile.SPRING_PROFILE_PRODUCTION.getName())) {
         String message = "You have misconfigured your application! "
           + "It should not run with both the 'dev' and 'prod' profiles at the same time.";
         log.error(message);
         throw new RuntimeException(message);
       }
-      if (activeProfiles.contains(SPRING_PROFILE_LOCAL) && activeProfiles.contains(SPRING_PROFILE_PRODUCTION)) {
+      if (activeProfiles.contains(Profile.SPRING_PROFILE_LOCAL.getName())
+        && activeProfiles.contains(Profile.SPRING_PROFILE_PRODUCTION.getName())) {
         String message = "You have misconfigured your application! "
           + "It should not run with both the 'local' and 'prod' profiles at the same time.";
         log.error(message);
         throw new RuntimeException(message);
       }
-      if (activeProfiles.contains(SPRING_PROFILE_DEVELOPMENT) && activeProfiles.contains(SPRING_PROFILE_LOCAL)) {
+      if (activeProfiles.contains(Profile.SPRING_PROFILE_DEVELOPMENT.getName())
+        && activeProfiles.contains(Profile.SPRING_PROFILE_LOCAL.getName())) {
         String message = "You have misconfigured your application! "
           + "It should not run with both the 'local' and 'dev' profiles at the same time.";
         log.error(message);

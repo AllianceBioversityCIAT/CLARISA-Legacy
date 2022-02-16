@@ -20,22 +20,25 @@
 package org.cgiar.clarisa.controller;
 
 
-import org.cgiar.ciat.auth.ADConexion;
-import org.cgiar.ciat.auth.LDAPService;
-import org.cgiar.ciat.auth.LDAPUser;
+import org.cgiar.clarisa.config.AppConfig;
 import org.cgiar.clarisa.dto.NewUserAuthenticationDTO;
 import org.cgiar.clarisa.dto.UserAuthenticationDTO;
 import org.cgiar.clarisa.manager.UserManager;
 import org.cgiar.clarisa.model.User;
-import org.cgiar.clarisa.utils.MD5Convert;
+import org.cgiar.clarisa.utils.Authenticator;
+import org.cgiar.clarisa.utils.DatabaseAuthenticator;
+import org.cgiar.clarisa.utils.JwtTokenUtils;
+import org.cgiar.clarisa.utils.LDAPAuthenticator;
+import org.cgiar.clarisa.utils.LoginStatus;
 
+import java.security.Principal;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -45,75 +48,85 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/userAuthentication")
+@RequestMapping("/auth")
 @CrossOrigin(origins = {"http://localhost:4200", "http://127.0.0.1:4200"})
 public class LoginController {
 
   private static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
 
   private UserManager userManager;
-  // private ConfigurableEnvironment env;
-  @Value("${spring.profiles.active}")
-  private String profile;
+
+  private JwtTokenUtils jwtTokenUtils;
+
+  private AppConfig appConfig;
 
   @Inject
-  public LoginController(UserManager userManager) {
+  public LoginController(UserManager userManager, JwtTokenUtils jwtTokenUtils, AppConfig appConfig) {
     super();
     this.userManager = userManager;
+    this.jwtTokenUtils = jwtTokenUtils;
+    this.appConfig = appConfig;
+  }
+
+  @RequestMapping("/user")
+  public Principal user(Principal user) {
+    return user;
   }
 
   @PostMapping(value = "/login")
   public ResponseEntity<UserAuthenticationDTO>
     userAuthentication(@RequestBody NewUserAuthenticationDTO newUserAuthenticationDTO) {
+    LoginStatus loginStatus = LoginStatus.NOT_LOGGED;
+    String username = newUserAuthenticationDTO.getEmail();
     UserAuthenticationDTO userAutenticationDTO = null;
-    User userlogged = userManager.getUserByEmail(newUserAuthenticationDTO.getEmail());
-    if (userlogged != null) {
-      String userEmail = userlogged.getEmail().trim().toLowerCase();
-      String md5Pass = MD5Convert.stringToMD5(newUserAuthenticationDTO.getPassword());
-      userAutenticationDTO = new UserAuthenticationDTO();
-      userAutenticationDTO.setEmail(userEmail);
-      userAutenticationDTO.setFirst_name(userlogged.getFirstName());
-      userAutenticationDTO.setLast_name(userlogged.getLastName());
-      userAutenticationDTO.setId(userlogged.getId());
-      if (!userlogged.getCgiarUser() && userlogged.getPassword().equals(md5Pass)) {
-        userAutenticationDTO.setAuthenticated(true);
-      } else {
-        userAutenticationDTO.setAuthenticated(false);
-        if (userlogged.getCgiarUser()) {
-          // try LDPA authentication
-          try {
-            LOG.info("Trying Authentication...");
-            ADConexion con = null;
-            LDAPService service = null;
-            LDAPUser ldapUser = null;
-            // TODO change to validate if you are on production.
-            if (profile.equals("local")) {
-              service = new LDAPService(true);
-            } else {
-              service = new LDAPService(false);
-            }
-            ldapUser = service.searchUserByEmail(userEmail);
-            con = service.authenticateUser(ldapUser.getLogin(), newUserAuthenticationDTO.getPassword());
-            if (con != null) {
-              if (con.getLogin() != null) {
-                userAutenticationDTO.setAuthenticated(true);
-              } else {
-                LOG.error("Authentication error  {}", con.getAuthenticationMessage());
-              }
-              con.closeContext();
-            } else {
-              LOG.error("connection error  {}", ldapUser);
-            }
-          } catch (Exception e) {
-            LOG.error("Exception raised trying to log in the user '{}' against the active directory. ",
-              newUserAuthenticationDTO.getEmail(), e.getMessage());
-          }
-        }
-      }
+    HttpStatus status = HttpStatus.OK;
+    Authenticator authenticator = null;
+
+    if (appConfig.isLocal()) {
+      authenticator = appConfig.getContext().getBean(DatabaseAuthenticator.class);
+    } else {
+      authenticator = appConfig.getContext().getBean(LDAPAuthenticator.class);
     }
-    return Optional.ofNullable(userAutenticationDTO).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+
+    if (!StringUtils.contains(username, "@")) {
+      username = this.userManager.getEmailFromUsername(username);
+    }
+
+    Optional<User> userOptional = this.userManager.getUserByUsername(username);
+    if (userOptional.isPresent()) {
+      User user = userOptional.get();
+      userAutenticationDTO = new UserAuthenticationDTO();
+      userAutenticationDTO.setEmail(user.getEmail());
+      userAutenticationDTO.setFirst_name(user.getFirstName());
+      userAutenticationDTO.setLast_name(user.getLastName());
+      userAutenticationDTO.setId(user.getId());
+    }
+
+    loginStatus = authenticator.authenticate(username, newUserAuthenticationDTO.getPassword());
+
+    switch (loginStatus) {
+      case LDAP_ERROR:
+        status = HttpStatus.INTERNAL_SERVER_ERROR;
+        // TODO
+        break;
+      case LOGGED_SUCCESSFULLY:
+        String token = this.jwtTokenUtils.generateJWTToken(userOptional.get());
+        userAutenticationDTO.setAuthenticated(true);
+        userAutenticationDTO.setToken(token);
+        break;
+      case NOT_LOGGED:
+      case WRONG_CREDENTIALS:
+        status = HttpStatus.FORBIDDEN;
+        break;
+      default:
+        LOG.error("What?!");
+        break;
+    }
+
+    int statusValue = status.value();
+    return Optional.ofNullable(userAutenticationDTO)
+      .map(result -> new ResponseEntity<>(result, HttpStatus.resolve(statusValue)))
       .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
-
 
 }
