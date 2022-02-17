@@ -17,12 +17,38 @@
  * @author Diego Perez - Alliance Bioversity/CIAT
  **************/
 
-package org.cgiar.clarisa.dao;
+package org.cgiar.clarisa.manager.impl;
 
+import org.cgiar.clarisa.dao.GlobalUnitDAO;
+import org.cgiar.clarisa.manager.GlobalUnitManager;
 import org.cgiar.clarisa.model.GlobalUnit;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import javax.inject.Inject;
 
-public interface GlobalUnitDAO extends JpaRepository<GlobalUnit, Long> {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
+
+@Service
+@Scope("singleton")
+public class GlobalUnitManagerImpl implements GlobalUnitManager {
+
+  private static final Logger LOG = LoggerFactory.getLogger(GlobalUnitManagerImpl.class);
+
+  private GlobalUnitDAO globalUnitDao;
+
+  @Inject
+  public GlobalUnitManagerImpl(GlobalUnitDAO globalUnitDao) {
+    super();
+    this.globalUnitDao = globalUnitDao;
+  }
+
+
+  @Override
+  public JpaRepository<GlobalUnit, Long> getDAO() {
+    return this.globalUnitDao;
+  }
 
 }
