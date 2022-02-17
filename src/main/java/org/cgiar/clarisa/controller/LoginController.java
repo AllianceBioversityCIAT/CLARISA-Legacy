@@ -28,7 +28,7 @@ import org.cgiar.clarisa.mapper.RoleMapper;
 import org.cgiar.clarisa.model.User;
 import org.cgiar.clarisa.utils.Authenticator;
 import org.cgiar.clarisa.utils.DatabaseAuthenticator;
-import org.cgiar.clarisa.utils.JwtTokenUtils;
+import org.cgiar.clarisa.utils.JwtUtils;
 import org.cgiar.clarisa.utils.LDAPAuthenticator;
 import org.cgiar.clarisa.utils.LoginStatus;
 
@@ -59,13 +59,12 @@ public class LoginController {
 
   private RoleMapper roleMapper;
 
-  private JwtTokenUtils jwtTokenUtils;
+  private JwtUtils jwtTokenUtils;
 
   private AppConfig appConfig;
 
   @Inject
-  public LoginController(UserManager userManager, JwtTokenUtils jwtTokenUtils, AppConfig appConfig,
-    RoleMapper roleMapper) {
+  public LoginController(UserManager userManager, JwtUtils jwtTokenUtils, AppConfig appConfig, RoleMapper roleMapper) {
     super();
     this.userManager = userManager;
     this.jwtTokenUtils = jwtTokenUtils;
@@ -119,6 +118,7 @@ public class LoginController {
         String token = this.jwtTokenUtils.generateJWTToken(userOptional.get());
         userAutenticationDTO.setAuthenticated(true);
         userAutenticationDTO.setToken(token);
+        userAutenticationDTO.setExpiresIn(this.jwtTokenUtils.getExpirationMilis(token));
         break;
       case NOT_LOGGED:
       case WRONG_CREDENTIALS:

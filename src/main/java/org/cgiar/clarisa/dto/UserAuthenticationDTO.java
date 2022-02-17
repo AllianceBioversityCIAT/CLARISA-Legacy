@@ -33,6 +33,8 @@ public class UserAuthenticationDTO extends BaseDTO {
 
   public String token;
 
+  private long expiresIn;
+
   public List<RoleDTO> roles;
 
 
@@ -40,6 +42,9 @@ public class UserAuthenticationDTO extends BaseDTO {
     return email;
   }
 
+  public long getExpiresIn() {
+    return expiresIn;
+  }
 
   public String getFirst_name() {
     return first_name;
@@ -61,13 +66,17 @@ public class UserAuthenticationDTO extends BaseDTO {
     return authenticated;
   }
 
+
   public void setAuthenticated(boolean authenticated) {
     this.authenticated = authenticated;
   }
 
-
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public void setExpiresIn(long expiresIn) {
+    this.expiresIn = expiresIn;
   }
 
   public void setFirst_name(String first_name) {
