@@ -63,13 +63,13 @@ public class JwtFilter extends OncePerRequestFilter {
     throws ServletException, IOException {
     // Get authorization header and validate
     final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-    if (StringUtils.isEmpty(header) || !header.startsWith("Bearer ")) {
+    if (StringUtils.isEmpty(header)) {
       chain.doFilter(request, response);
       return;
     }
 
     // Get jwt token and validate
-    final String token = header.split(" ")[1].trim();
+    final String token = StringUtils.remove(header, "Bearer").trim();
     boolean validToken = false;
     try {
       validToken = jwtTokenUtils.validate(token);
