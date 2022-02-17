@@ -24,7 +24,9 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtParserBuilder;
 import io.jsonwebtoken.Jwts;
@@ -40,23 +42,39 @@ import org.springframework.stereotype.Component;
  **************/
 
 @Component
-public class JwtTokenUtils {
+public class JwtUtils {
 
   private AppConfig appConfig;
 
   @Inject
-  public JwtTokenUtils(AppConfig appConfig) {
+  public JwtUtils(AppConfig appConfig) {
     this.appConfig = appConfig;
   }
 
+  /**
+   * Generates a Bearer token from an user
+   * 
+   * @param user the user to be used to generate the token
+   * @return the generated token for the user
+   */
   public String generateJWTToken(User user) {
     long now = System.currentTimeMillis();
+    // FIXME change the id
     String token = this.getJwtBuilder().setId("test").setSubject(user.getEmail())
       .claim("authorities",
         user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
       .setIssuedAt(new Date(now)).setExpiration(new Date(now + this.appConfig.getJwtExpirationTime())).compact();
 
-    return "Bearer " + token;
+    return token;
+  }
+
+  private Jws<Claims> getClaims(String token) {
+    return this.getJwtParserWithSecret().build().parseClaimsJws(token);
+  }
+
+  public Long getExpirationMilis(String token) {
+    Date expiration = this.getClaims(token).getBody().getExpiration();
+    return expiration != null ? expiration.getTime() : 0;
   }
 
   private final JwtBuilder getJwtBuilder() {
@@ -69,7 +87,7 @@ public class JwtTokenUtils {
   }
 
   public String getUsername(String token) {
-    return this.getJwtParserWithSecret().build().parseClaimsJws(token).getBody().getSubject();
+    return this.getClaims(token).getBody().getSubject();
   }
 
   public boolean validate(String token) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException,
