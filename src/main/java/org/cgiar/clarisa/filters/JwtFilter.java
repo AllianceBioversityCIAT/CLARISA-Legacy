@@ -16,7 +16,7 @@
 package org.cgiar.clarisa.filters;
 
 import org.cgiar.clarisa.manager.UserManager;
-import org.cgiar.clarisa.utils.JwtTokenUtils;
+import org.cgiar.clarisa.utils.JwtUtils;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -43,17 +43,17 @@ import org.springframework.web.filter.OncePerRequestFilter;
  **************/
 
 @Component
-public class JwtTokenFilter extends OncePerRequestFilter {
+public class JwtFilter extends OncePerRequestFilter {
 
   // Logger
-  private static final Logger LOG = LoggerFactory.getLogger(JwtTokenFilter.class);
+  private static final Logger LOG = LoggerFactory.getLogger(JwtFilter.class);
 
-  private final JwtTokenUtils jwtTokenUtils;
+  private final JwtUtils jwtTokenUtils;
 
   private final UserManager userManager;
 
   @Inject
-  public JwtTokenFilter(JwtTokenUtils jwtTokenUtils, UserManager userManager) {
+  public JwtFilter(JwtUtils jwtTokenUtils, UserManager userManager) {
     this.jwtTokenUtils = jwtTokenUtils;
     this.userManager = userManager;
   }
