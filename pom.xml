@@ -68,11 +68,11 @@
 	    <version>${io.jsonwebtoken.version}</version>
 	    <scope>runtime</scope>
 		</dependency>
-		<dependency>
+		<!--dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-collections4</artifactId>
 			<version>${org.apache.commons.collections4.version}</version>
-		</dependency>
+		</dependency-->
 		<!-- End dependencies -->
 		<!-- Boot dependencies -->
 		<dependency>
