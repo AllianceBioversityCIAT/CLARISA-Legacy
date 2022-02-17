@@ -125,7 +125,7 @@ public class LoginController {
         status = HttpStatus.FORBIDDEN;
         break;
       default:
-        LOG.error("What?!");
+        LOG.error("Unexpected Error");
         break;
     }
 

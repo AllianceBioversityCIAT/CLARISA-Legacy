@@ -13,37 +13,16 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.dto;
-
 /**************
- * @author German C. Martinez - CIAT/CCAFS
+ * @author Diego Perez - Alliance Bioversity/CIAT
  **************/
 
-public class InstitutionTypeDTO extends BaseDTO {
+package org.cgiar.clarisa.dao;
 
-  private String name;
-  private String acronym;
+import org.cgiar.clarisa.model.InstitutionType;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 
-  public InstitutionTypeDTO() {
-  }
-
-
-  public String getAcronym() {
-    return acronym;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setAcronym(String acronym) {
-    this.acronym = acronym;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
+public interface InstitutionTypeDAO extends JpaRepository<InstitutionType, Long> {
 
 }

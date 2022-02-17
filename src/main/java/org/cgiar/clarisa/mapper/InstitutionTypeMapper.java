@@ -24,7 +24,7 @@ import org.mapstruct.Mapper;
  * @author German C. Martinez - CIAT/CCAFS
  **************/
 
-@Mapper(componentModel = "jsr330", uses = {RepIndOrganizationTypeMapper.class})
+@Mapper(componentModel = "jsr330")
 public interface InstitutionTypeMapper extends BaseMapper<InstitutionType, InstitutionTypeDTO> {
 
 }
