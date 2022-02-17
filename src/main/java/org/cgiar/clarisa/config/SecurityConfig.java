@@ -16,7 +16,7 @@
 package org.cgiar.clarisa.config;
 
 import org.cgiar.clarisa.exception.UserNotFoundException;
-import org.cgiar.clarisa.filters.JwtTokenFilter;
+import org.cgiar.clarisa.filters.JwtFilter;
 import org.cgiar.clarisa.manager.UserManager;
 
 import javax.inject.Inject;
@@ -44,10 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   private AppConfig appConfig;
 
-  private final JwtTokenFilter jwtTokenFilter;
+  private final JwtFilter jwtTokenFilter;
 
   @Inject
-  public SecurityConfig(JwtTokenFilter jwtTokenFilter, UserManager userManager, AppConfig appConfig) {
+  public SecurityConfig(JwtFilter jwtTokenFilter, UserManager userManager, AppConfig appConfig) {
     this.jwtTokenFilter = jwtTokenFilter;
     this.userManager = userManager;
     this.appConfig = appConfig;

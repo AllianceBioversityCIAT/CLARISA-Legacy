@@ -15,6 +15,8 @@
 
 package org.cgiar.clarisa.model;
 
+import org.cgiar.clarisa.utils.GeneralUtils;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -31,7 +33,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.google.gson.annotations.Expose;
-import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -113,7 +114,7 @@ public class User extends ClarisaAuditableEntity implements java.io.Serializable
   @Transient
   public Collection<? extends GrantedAuthority> getAuthorities() {
     List<GrantedAuthority> currentRoles = new ArrayList<>();
-    ListUtils.emptyIfNull(this.getUserRoles())
+    GeneralUtils.emptyIfNull(this.getUserRoles())
       .forEach(role -> currentRoles.add(new SimpleGrantedAuthority(role.getDescription())));
     return currentRoles;
   }
