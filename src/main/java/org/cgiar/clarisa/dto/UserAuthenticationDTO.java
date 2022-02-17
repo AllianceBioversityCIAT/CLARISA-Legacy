@@ -19,6 +19,8 @@
 
 package org.cgiar.clarisa.dto;
 
+import java.util.List;
+
 public class UserAuthenticationDTO extends BaseDTO {
 
   public String first_name;
@@ -31,9 +33,13 @@ public class UserAuthenticationDTO extends BaseDTO {
 
   public String token;
 
+  public List<RoleDTO> roles;
+
+
   public String getEmail() {
     return email;
   }
+
 
   public String getFirst_name() {
     return first_name;
@@ -41,6 +47,10 @@ public class UserAuthenticationDTO extends BaseDTO {
 
   public String getLast_name() {
     return last_name;
+  }
+
+  public List<RoleDTO> getRoles() {
+    return roles;
   }
 
   public String getToken() {
@@ -51,10 +61,10 @@ public class UserAuthenticationDTO extends BaseDTO {
     return authenticated;
   }
 
-
   public void setAuthenticated(boolean authenticated) {
     this.authenticated = authenticated;
   }
+
 
   public void setEmail(String email) {
     this.email = email;
@@ -66,6 +76,10 @@ public class UserAuthenticationDTO extends BaseDTO {
 
   public void setLast_name(String last_name) {
     this.last_name = last_name;
+  }
+
+  public void setRoles(List<RoleDTO> roles) {
+    this.roles = roles;
   }
 
   public void setToken(String token) {

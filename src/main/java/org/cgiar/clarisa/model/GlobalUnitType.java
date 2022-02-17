@@ -1,6 +1,6 @@
 /*****************************************************************
  * This file is part of CGIAR Level Agricultural Results
- * Interoperable System Architecture (CLARISA).
+ * Interoperable System Architecture Platform (CLARISA).
  * CLARISA is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,18 +17,32 @@
  * @author Diego Perez - Alliance Bioversity/CIAT
  **************/
 
-package org.cgiar.clarisa.dao;
+package org.cgiar.clarisa.model;
 
-import org.cgiar.clarisa.model.Role;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
-import java.util.List;
+@Entity
+@Table(name = "global_unit_types")
+@NamedQuery(name = "GlobalUnitType.findAll", query = "SELECT gt FROM GlobalUnitType gt")
+public class GlobalUnitType extends ClarisaBaseEntity implements java.io.Serializable {
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
 
-public interface RoleDAO extends JpaRepository<Role, Long> {
 
-  @Query("select r from Role r where r.globalUnit= ?1")
-  public List<Role> findByGlobalUnit(Long globalUnit);
+  private String name;
 
+  @Column
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
 }

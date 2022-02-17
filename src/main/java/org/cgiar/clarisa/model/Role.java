@@ -21,7 +21,10 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -47,8 +50,12 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
   @Expose
   private Integer order;
 
+  private GlobalUnit globalUnit;
+
+
   // relations
   private List<User> roleUsers;
+
 
   public Role() {
   }
@@ -74,7 +81,6 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     return true;
   }
 
-
   @Column
   public String getAcronym() {
     return this.acronym;
@@ -89,9 +95,16 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     return this.getAcronym() + ", " + this.getDescription();
   }
 
+
   @Column
   public String getDescription() {
     return this.description;
+  }
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "global_unit_id")
+  public GlobalUnit getGlobalUnit() {
+    return globalUnit;
   }
 
   @Column
@@ -103,7 +116,6 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
   public List<User> getRoleUsers() {
     return roleUsers;
   }
-
 
   @Override
   public int hashCode() {
@@ -118,8 +130,13 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     this.acronym = acronym;
   }
 
+
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public void setGlobalUnit(GlobalUnit globalUnit) {
+    this.globalUnit = globalUnit;
   }
 
   public void setOrder(Integer order) {

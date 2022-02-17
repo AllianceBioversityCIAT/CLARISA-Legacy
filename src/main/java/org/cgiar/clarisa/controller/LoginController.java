@@ -24,6 +24,7 @@ import org.cgiar.clarisa.config.AppConfig;
 import org.cgiar.clarisa.dto.NewUserAuthenticationDTO;
 import org.cgiar.clarisa.dto.UserAuthenticationDTO;
 import org.cgiar.clarisa.manager.UserManager;
+import org.cgiar.clarisa.mapper.RoleMapper;
 import org.cgiar.clarisa.model.User;
 import org.cgiar.clarisa.utils.Authenticator;
 import org.cgiar.clarisa.utils.DatabaseAuthenticator;
@@ -56,16 +57,20 @@ public class LoginController {
 
   private UserManager userManager;
 
+  private RoleMapper roleMapper;
+
   private JwtTokenUtils jwtTokenUtils;
 
   private AppConfig appConfig;
 
   @Inject
-  public LoginController(UserManager userManager, JwtTokenUtils jwtTokenUtils, AppConfig appConfig) {
+  public LoginController(UserManager userManager, JwtTokenUtils jwtTokenUtils, AppConfig appConfig,
+    RoleMapper roleMapper) {
     super();
     this.userManager = userManager;
     this.jwtTokenUtils = jwtTokenUtils;
     this.appConfig = appConfig;
+    this.roleMapper = roleMapper;
   }
 
   @RequestMapping("/user")
@@ -100,6 +105,7 @@ public class LoginController {
       userAutenticationDTO.setFirst_name(user.getFirstName());
       userAutenticationDTO.setLast_name(user.getLastName());
       userAutenticationDTO.setId(user.getId());
+      userAutenticationDTO.setRoles(roleMapper.entityListToDtoList(user.getUserRoles()));
     }
 
     loginStatus = authenticator.authenticate(username, newUserAuthenticationDTO.getPassword());

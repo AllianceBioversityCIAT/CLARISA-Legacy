@@ -1,6 +1,6 @@
 /*****************************************************************
  * This file is part of CGIAR Level Agricultural Results
- * Interoperable System Architecture (CLARISA).
+ * Interoperable System Architecture Platform (CLARISA).
  * CLARISA is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,18 +17,47 @@
  * @author Diego Perez - Alliance Bioversity/CIAT
  **************/
 
-package org.cgiar.clarisa.dao;
+package org.cgiar.clarisa.dto;
 
-import org.cgiar.clarisa.model.Role;
 
-import java.util.List;
+public class GlobalUnitDTO extends SimpleDTO {
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+  private String name;
 
-public interface RoleDAO extends JpaRepository<Role, Long> {
+  private String acronym;
 
-  @Query("select r from Role r where r.globalUnit= ?1")
-  public List<Role> findByGlobalUnit(Long globalUnit);
+  private String officialCode;
+
+
+  public String getAcronym() {
+    return acronym;
+  }
+
+
+  @Override
+  public String getName() {
+    return name;
+  }
+
+
+  public String getOfficialCode() {
+    return officialCode;
+  }
+
+
+  public void setAcronym(String acronym) {
+    this.acronym = acronym;
+  }
+
+
+  @Override
+  public void setName(String name) {
+    this.name = name;
+  }
+
+
+  public void setOfficialCode(String officialCode) {
+    this.officialCode = officialCode;
+  }
 
 }

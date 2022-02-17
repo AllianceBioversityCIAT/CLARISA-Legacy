@@ -19,8 +19,10 @@
 
 package org.cgiar.clarisa.mapper;
 
+import org.cgiar.clarisa.dto.GlobalUnitDTO;
 import org.cgiar.clarisa.dto.RoleDTO;
 import org.cgiar.clarisa.dto.SimpleDTO;
+import org.cgiar.clarisa.model.GlobalUnit;
 import org.cgiar.clarisa.model.Role;
 import org.cgiar.clarisa.model.UserRole;
 
@@ -32,8 +34,10 @@ import org.mapstruct.Mappings;
 @Mapper(componentModel = "jsr330")
 public interface RoleMapper extends SimpleBaseMapper<Role, RoleDTO> {
 
+
   @Override
-  @Mappings({@Mapping(target = "name", expression = "java(entity.getComposedName())")})
+  @Mappings({@Mapping(target = "name", expression = "java(entity.getComposedName())"),
+    @Mapping(target = "globalUnit", expression = "java(this.globalUnitToGlobalUnitDto(entity.getGlobalUnit()))")})
   public RoleDTO entityToDto(Role entity);
 
   @Override
@@ -41,17 +45,19 @@ public interface RoleMapper extends SimpleBaseMapper<Role, RoleDTO> {
   public SimpleDTO entityToSimpleDto(Role entity, @Context Object dummy);
 
 
+  @Mappings({@Mapping(target = "officialCode", source = "smoCode")})
+  public GlobalUnitDTO globalUnitToGlobalUnitDto(GlobalUnit entity);
+
   public default RoleDTO userRoleToRoleDTO(UserRole userRole) {
     if (userRole == null) {
       return null;
     }
 
     RoleDTO roleDTO = new RoleDTO();
-
     roleDTO.setId(userRole.getRole().getId());
     roleDTO.setDescription(userRole.getRole().getDescription());
     roleDTO.setAcronym(userRole.getRole().getAcronym());
-
+    roleDTO.setGlobalUnit(this.globalUnitToGlobalUnitDto(userRole.getRole().getGlobalUnit()));
     return roleDTO;
 
   }

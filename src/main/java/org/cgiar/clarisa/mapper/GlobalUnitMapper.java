@@ -1,6 +1,6 @@
 /*****************************************************************
  * This file is part of CGIAR Level Agricultural Results
- * Interoperable System Architecture (CLARISA).
+ * Interoperable System Architecture Platform (CLARISA).
  * CLARISA is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,18 +17,25 @@
  * @author Diego Perez - Alliance Bioversity/CIAT
  **************/
 
-package org.cgiar.clarisa.dao;
+package org.cgiar.clarisa.mapper;
 
-import org.cgiar.clarisa.model.Role;
+import org.cgiar.clarisa.dto.GlobalUnitDTO;
+import org.cgiar.clarisa.dto.SimpleDTO;
+import org.cgiar.clarisa.model.GlobalUnit;
 
-import java.util.List;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+@Mapper(componentModel = "jsr330")
+public interface GlobalUnitMapper extends SimpleBaseMapper<GlobalUnit, GlobalUnitDTO> {
 
-public interface RoleDAO extends JpaRepository<Role, Long> {
+  @Override
+  @Mappings({@Mapping(target = "officialCode", source = "smoCode")})
+  public GlobalUnitDTO entityToDto(GlobalUnit entity);
 
-  @Query("select r from Role r where r.globalUnit= ?1")
-  public List<Role> findByGlobalUnit(Long globalUnit);
+  @Override
+  public SimpleDTO entityToSimpleDto(GlobalUnit entity, Object dummy);
+
 
 }

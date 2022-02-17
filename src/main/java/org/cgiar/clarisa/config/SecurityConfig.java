@@ -19,6 +19,8 @@ import org.cgiar.clarisa.exception.UserNotFoundException;
 import org.cgiar.clarisa.filters.JwtTokenFilter;
 import org.cgiar.clarisa.manager.UserManager;
 
+import javax.inject.Inject;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -40,11 +42,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   private UserManager userManager;
 
+  private AppConfig appConfig;
+
   private final JwtTokenFilter jwtTokenFilter;
 
-  public SecurityConfig(JwtTokenFilter jwtTokenFilter, UserManager userManager) {
+  @Inject
+  public SecurityConfig(JwtTokenFilter jwtTokenFilter, UserManager userManager, AppConfig appConfig) {
     this.jwtTokenFilter = jwtTokenFilter;
     this.userManager = userManager;
+    this.appConfig = appConfig;
   }
 
   @Override
@@ -83,7 +89,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   public BCryptPasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
+    return new BCryptPasswordEncoder(appConfig.getBcryptRounds());
   }
 
 }

@@ -28,6 +28,9 @@ public class RoleDTO extends SimpleDTO {
   private String acronym;
 
 
+  private GlobalUnitDTO globalUnit;
+
+
   public String getAcronym() {
     return acronym;
   }
@@ -38,6 +41,11 @@ public class RoleDTO extends SimpleDTO {
   }
 
 
+  public GlobalUnitDTO getGlobalUnit() {
+    return globalUnit;
+  }
+
+
   public void setAcronym(String acronym) {
     this.acronym = acronym;
   }
@@ -45,6 +53,11 @@ public class RoleDTO extends SimpleDTO {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+
+  public void setGlobalUnit(GlobalUnitDTO globalUnit) {
+    this.globalUnit = globalUnit;
   }
 
 

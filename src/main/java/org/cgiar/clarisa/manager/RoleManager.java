@@ -21,6 +21,10 @@ package org.cgiar.clarisa.manager;
 
 import org.cgiar.clarisa.model.Role;
 
+import java.util.List;
+
 public interface RoleManager extends GenericManager<Role> {
+
+  public List<Role> findByGlobalUnit(Long globalUnit);
 
 }

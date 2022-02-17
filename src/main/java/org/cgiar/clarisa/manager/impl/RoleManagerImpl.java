@@ -23,6 +23,8 @@ import org.cgiar.clarisa.dao.RoleDAO;
 import org.cgiar.clarisa.manager.RoleManager;
 import org.cgiar.clarisa.model.Role;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -43,6 +45,11 @@ public class RoleManagerImpl implements RoleManager {
   public RoleManagerImpl(RoleDAO roleDao) {
     super();
     this.roleDao = roleDao;
+  }
+
+  @Override
+  public List<Role> findByGlobalUnit(Long globalUnit) {
+    return this.roleDao.findByGlobalUnit(globalUnit);
   }
 
   @Override
