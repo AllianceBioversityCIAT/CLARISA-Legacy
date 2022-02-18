@@ -19,6 +19,7 @@
 
 package org.cgiar.clarisa.controller;
 
+import org.cgiar.clarisa.dto.SearchUserDTO;
 import org.cgiar.clarisa.dto.SimpleDTO;
 import org.cgiar.clarisa.dto.UserDTO;
 import org.cgiar.clarisa.manager.GenericManager;
@@ -26,17 +27,23 @@ import org.cgiar.clarisa.manager.UserManager;
 import org.cgiar.clarisa.mapper.BaseMapper;
 import org.cgiar.clarisa.mapper.UserMapper;
 import org.cgiar.clarisa.model.User;
+import org.cgiar.clarisa.utils.ldap.LDAPUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -58,11 +65,21 @@ public class UserController extends GenericController<User, UserDTO> {
   // Mapper
   private UserMapper mapper;
 
+  private LDAPUtils ldapUtils;
+
   @Inject
-  public UserController(UserManager manager, UserMapper mapper) {
+  public UserController(UserManager manager, UserMapper mapper, LDAPUtils ldapUtils) {
     super(User.class);
     this.manager = manager;
     this.mapper = mapper;
+    this.ldapUtils = ldapUtils;
+  }
+
+  @PostMapping(value = "/create")
+  public ResponseEntity<UserDTO> createUser(UserDTO newUser) {
+
+
+    return ResponseEntity.ok(null);
   }
 
   @GetMapping(value = "/simple")
@@ -71,6 +88,25 @@ public class UserController extends GenericController<User, UserDTO> {
     return ResponseEntity.ok(this.mapper.entityListToSimpleDtoList(resultList));
   }
 
+  @PostMapping(value = "/get/username")
+  public ResponseEntity<List<UserDTO>> findUser(@RequestBody SearchUserDTO searchUser) {
+    HttpStatus httpStatus = HttpStatus.OK;
+    List<User> users = Collections.emptyList();
+    if (searchUser != null) {
+      String toFind = StringUtils.trimToEmpty(searchUser.getUsername());
+      if (searchUser.getIsCgiarUser()) {
+        if (StringUtils.contains(toFind, '@')) {
+          users = Collections.singletonList(this.ldapUtils.findUserByEmail(toFind));
+        } else {
+          users = this.ldapUtils.findUsersByUsername(toFind);
+        }
+      } else {
+        users = Collections.singletonList(manager.getUserByUsername(toFind).orElse(null));
+      }
+    }
+
+    return ResponseEntity.status(httpStatus).body(mapper.entityListToDtoList(users));
+  }
 
   @Override
   public Logger getClassLogger() {
@@ -91,5 +127,10 @@ public class UserController extends GenericController<User, UserDTO> {
   @Override
   public ObjectMapper getObjectMapper() {
     return this.objectMapper;
+  }
+
+  @Override
+  public ResponseEntity<UserDTO> save(UserDTO dto) {
+    return this.createUser(dto);
   }
 }

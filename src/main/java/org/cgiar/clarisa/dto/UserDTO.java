@@ -33,65 +33,66 @@ public class UserDTO extends SimpleDTO {
 
   private boolean isActive;
 
+  private boolean cgiarUser;
+
   private List<RoleDTO> roleList;
 
+
+  public boolean getCgiarUser() {
+    return cgiarUser;
+  }
 
   public String getEmail() {
     return email;
   }
 
-
   public String getFirstName() {
     return firstName;
   }
-
 
   public boolean getIsActive() {
     return isActive;
   }
 
-
   public String getLastName() {
     return lastName;
   }
 
-
   public List<RoleDTO> getRoleList() {
     return roleList;
   }
-
 
   public String getUsername() {
     return username;
   }
 
 
+  public void setCgiarUser(boolean isCgiarUser) {
+    this.cgiarUser = isCgiarUser;
+  }
+
   public void setEmail(String email) {
     this.email = email;
   }
-
 
   public void setFirstName(String firstName) {
     this.firstName = firstName;
   }
 
-
   public void setIsActive(boolean isActive) {
     this.isActive = isActive;
   }
-
 
   public void setLastName(String lastName) {
     this.lastName = lastName;
   }
 
-
   public void setRoleList(List<RoleDTO> roleList) {
     this.roleList = roleList;
   }
 
-
   public void setUsername(String username) {
     this.username = username;
   }
+
 }
