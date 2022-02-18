@@ -26,11 +26,11 @@ import org.cgiar.clarisa.dto.UserAuthenticationDTO;
 import org.cgiar.clarisa.manager.UserManager;
 import org.cgiar.clarisa.mapper.RoleMapper;
 import org.cgiar.clarisa.model.User;
-import org.cgiar.clarisa.utils.Authenticator;
-import org.cgiar.clarisa.utils.DatabaseAuthenticator;
 import org.cgiar.clarisa.utils.JwtUtils;
-import org.cgiar.clarisa.utils.LDAPAuthenticator;
-import org.cgiar.clarisa.utils.LoginStatus;
+import org.cgiar.clarisa.utils.auth.Authenticator;
+import org.cgiar.clarisa.utils.auth.DatabaseAuthenticator;
+import org.cgiar.clarisa.utils.auth.LDAPAuthenticator;
+import org.cgiar.clarisa.utils.auth.LoginStatus;
 
 import java.security.Principal;
 import java.util.Optional;

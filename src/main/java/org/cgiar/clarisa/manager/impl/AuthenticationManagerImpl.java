@@ -19,7 +19,7 @@ import org.cgiar.clarisa.config.AppConfig;
 import org.cgiar.clarisa.manager.AuthenticationManager;
 import org.cgiar.clarisa.manager.UserManager;
 import org.cgiar.clarisa.model.User;
-import org.cgiar.clarisa.utils.LoginStatus;
+import org.cgiar.clarisa.utils.auth.LoginStatus;
 
 import java.util.Optional;
 

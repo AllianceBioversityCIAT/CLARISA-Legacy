@@ -13,7 +13,7 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.utils;
+package org.cgiar.clarisa.utils.auth;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT

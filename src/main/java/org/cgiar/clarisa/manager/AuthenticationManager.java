@@ -15,7 +15,7 @@
 
 package org.cgiar.clarisa.manager;
 
-import org.cgiar.clarisa.utils.LoginStatus;
+import org.cgiar.clarisa.utils.auth.LoginStatus;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
