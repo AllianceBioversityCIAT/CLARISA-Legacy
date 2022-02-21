@@ -19,6 +19,7 @@
 
 package org.cgiar.clarisa.controller;
 
+import org.cgiar.clarisa.config.AppConfig;
 import org.cgiar.clarisa.dto.SearchUserDTO;
 import org.cgiar.clarisa.dto.SimpleDTO;
 import org.cgiar.clarisa.dto.UserDTO;
@@ -40,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,13 +68,15 @@ public class UserController extends GenericController<User, UserDTO> {
   private UserMapper mapper;
 
   private LDAPUtils ldapUtils;
+  private AppConfig appConfig;
 
   @Inject
-  public UserController(UserManager manager, UserMapper mapper, LDAPUtils ldapUtils) {
+  public UserController(UserManager manager, UserMapper mapper, LDAPUtils ldapUtils, AppConfig appConfig) {
     super(User.class);
     this.manager = manager;
     this.mapper = mapper;
     this.ldapUtils = ldapUtils;
+    this.appConfig = appConfig;
   }
 
   @PostMapping(value = "/create")
@@ -131,6 +135,8 @@ public class UserController extends GenericController<User, UserDTO> {
 
   @Override
   public ResponseEntity<UserDTO> save(UserDTO dto) {
-    return this.createUser(dto);
+    BCryptPasswordEncoder encoder = appConfig.getContext().getBean(BCryptPasswordEncoder.class);
+    dto.setPassword(encoder.encode(dto.getPassword()));
+    return super.save(dto);
   }
 }
