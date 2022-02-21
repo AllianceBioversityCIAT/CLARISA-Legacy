@@ -29,6 +29,8 @@ public class UserDTO extends SimpleDTO {
 
   private String username;
 
+  private String password;
+
   private String email;
 
   private boolean isActive;
@@ -58,6 +60,10 @@ public class UserDTO extends SimpleDTO {
     return lastName;
   }
 
+  public String getPassword() {
+    return password;
+  }
+
   public List<RoleDTO> getRoleList() {
     return roleList;
   }
@@ -85,6 +91,10 @@ public class UserDTO extends SimpleDTO {
 
   public void setLastName(String lastName) {
     this.lastName = lastName;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   public void setRoleList(List<RoleDTO> roleList) {
