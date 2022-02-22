@@ -23,7 +23,6 @@ import org.cgiar.clarisa.config.AppConfig;
 import org.cgiar.clarisa.dto.PasswordChangeDTO;
 import org.cgiar.clarisa.dto.SimpleDTO;
 import org.cgiar.clarisa.dto.UserDTO;
-import org.cgiar.clarisa.exception.NonMatchingPasswordsException;
 import org.cgiar.clarisa.exception.UserNotFoundException;
 import org.cgiar.clarisa.manager.GenericManager;
 import org.cgiar.clarisa.manager.UserManager;
@@ -166,19 +165,17 @@ public class UserController extends GenericController<User, UserDTO> {
   @PostMapping(value = "/passwordChange")
   public ResponseEntity<Boolean> userChangePassword(@RequestBody PasswordChangeDTO passwordChangeDTO) {
     if (passwordChangeDTO == null || StringUtils.isEmpty(passwordChangeDTO.getNewPassword())
-      || StringUtils.isEmpty(passwordChangeDTO.getOldPassword())
       || StringUtils.isEmpty(passwordChangeDTO.getUsername())) {
       return ResponseEntity.badRequest().body(false);
     }
 
     User previousUser =
       this.manager.getUserByUsername(passwordChangeDTO.getUsername()).orElseThrow(() -> new UserNotFoundException());
-    BCryptPasswordEncoder encoder = appConfig.getContext().getBean(BCryptPasswordEncoder.class);
-    if (!encoder.matches(StringUtils.trimToEmpty(passwordChangeDTO.getOldPassword()), previousUser.getPassword())) {
-      throw new NonMatchingPasswordsException(previousUser.getUsername());
-    }
 
-    this.manager.changePassword(passwordChangeDTO.getNewPassword(), previousUser.getUsername());
+    BCryptPasswordEncoder encoder = appConfig.getContext().getBean(BCryptPasswordEncoder.class);
+    String newPassword = encoder.encode(passwordChangeDTO.getNewPassword());
+
+    this.manager.changePassword(newPassword, previousUser.getUsername());
 
     return ResponseEntity.ok(true);
   }

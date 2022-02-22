@@ -15,6 +15,7 @@
 
 package org.cgiar.clarisa.controller;
 
+import org.cgiar.clarisa.config.AppConfig;
 import org.cgiar.clarisa.dto.PasswordChangeDTO;
 import org.cgiar.clarisa.exception.UserNotFoundException;
 import org.cgiar.clarisa.manager.UserManager;
@@ -26,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,20 +47,19 @@ public class AdminController {
   private static final Logger LOG = LoggerFactory.getLogger(AdminController.class);
 
   // private LDAPUtils ldapUtils;
-  // private AppConfig appConfig;
+  private AppConfig appConfig;
   private UserManager userManager;
 
   @Inject
-  public AdminController(/* LDAPUtils ldapUtils, AppConfig appConfig, */UserManager userManager) {
+  public AdminController(/* LDAPUtils ldapUtils, */AppConfig appConfig, UserManager userManager) {
     // this.ldapUtils = ldapUtils;
-    // this.appConfig = appConfig;
+    this.appConfig = appConfig;
     this.userManager = userManager;
   }
 
   @PostMapping(value = "/passwordChange")
   public ResponseEntity<Boolean> userChangePassword(@RequestBody PasswordChangeDTO passwordChangeDTO) {
     if (passwordChangeDTO == null || StringUtils.isEmpty(passwordChangeDTO.getNewPassword())
-      || StringUtils.isEmpty(passwordChangeDTO.getOldPassword())
       || StringUtils.isEmpty(passwordChangeDTO.getUsername())) {
       return ResponseEntity.badRequest().body(false);
     }
@@ -66,7 +67,10 @@ public class AdminController {
     User previousUser = this.userManager.getUserByUsername(passwordChangeDTO.getUsername())
       .orElseThrow(() -> new UserNotFoundException());
 
-    this.userManager.changePassword(passwordChangeDTO.getNewPassword(), previousUser.getUsername());
+    BCryptPasswordEncoder encoder = appConfig.getContext().getBean(BCryptPasswordEncoder.class);
+    String newPassword = encoder.encode(passwordChangeDTO.getNewPassword());
+
+    this.userManager.changePassword(newPassword, previousUser.getUsername());
 
     return ResponseEntity.ok(true);
   }
