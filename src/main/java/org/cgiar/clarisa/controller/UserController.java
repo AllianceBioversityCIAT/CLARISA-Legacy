@@ -145,14 +145,14 @@ public class UserController extends GenericController<User, UserDTO> {
   }
 
   @Override
-  public ResponseEntity<UserDTO> save(UserDTO dto) {
+  public ResponseEntity<UserDTO> save(@RequestBody UserDTO dto) {
     BCryptPasswordEncoder encoder = appConfig.getContext().getBean(BCryptPasswordEncoder.class);
     dto.setPassword(encoder.encode(dto.getPassword()));
     return super.save(dto);
   }
 
   @Override
-  public ResponseEntity<UserDTO> update(UserDTO dto) {
+  public ResponseEntity<UserDTO> update(@RequestBody UserDTO dto) {
     User previousUser = this.manager.findById(dto.getId()).orElseThrow(() -> new UserNotFoundException());
     if (StringUtils.isEmpty(dto.getPassword())) {
       dto.setPassword(previousUser.getPassword());
