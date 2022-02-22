@@ -13,15 +13,27 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.manager;
+package org.cgiar.clarisa.exception;
 
-import org.cgiar.clarisa.utils.auth.LoginStatus;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
  **************/
 
-public interface AuthenticationManager {
+public class NonMatchingPasswordsException extends RuntimeException {
 
-  public LoginStatus verifyCredentials(String username, String password);
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -8766222977332770298L;
+
+  public static final String WRONG_PASSWORD = "The old password for the user %s is not correct!";
+
+  public NonMatchingPasswordsException() {
+    super();
+  }
+
+  public NonMatchingPasswordsException(String username) {
+    super(String.format(WRONG_PASSWORD, username));
+  }
 }

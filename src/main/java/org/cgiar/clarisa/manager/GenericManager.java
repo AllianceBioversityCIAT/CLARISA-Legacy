@@ -15,15 +15,17 @@
 
 package org.cgiar.clarisa.manager;
 
-import org.cgiar.clarisa.exception.DetachedEntityException;
 import org.cgiar.clarisa.exception.EntityNotFoundException;
+import org.cgiar.clarisa.exception.NullEntityIdentifierException;
 import org.cgiar.clarisa.model.ClarisaBaseEntity;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**************
@@ -31,16 +33,27 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * 
  * @author German C. Martinez - CIAT/CCAFS
  * @param <T> entity class targeted by this manager
- * @param <Long> the entity class of the identifier for the class
  **************/
 
 public interface GenericManager<T extends ClarisaBaseEntity> {
 
+  /**
+   * Gets a count of the number of entities in the table
+   * 
+   * @return the number of entities
+   */
   public default Long count() {
     return this.getDAO().count();
   }
 
-  public default void delete(T entity) throws RuntimeException {
+  /**
+   * Deletes an entity passed as a parameter
+   * 
+   * @param entity the entity to be removed
+   * @throws EntityNotFoundException if the entity does not exist
+   * @throws NullEntityIdentifierException if the identifier is null
+   */
+  public default void delete(T entity) throws EntityNotFoundException, NullEntityIdentifierException {
     Objects.requireNonNull(entity);
 
     Long id = entity.getId();
@@ -50,37 +63,105 @@ public interface GenericManager<T extends ClarisaBaseEntity> {
     this.getDAO().delete(entity);
   }
 
-  public default void deleteById(Long id) throws RuntimeException {
+  /**
+   * Deletes an entity by a given ID
+   * 
+   * @param id the entity's ID
+   * @throws EntityNotFoundException if the entity does not exist
+   * @throws NullEntityIdentifierException if the identifier is null
+   */
+  public default void deleteById(Long id) throws EntityNotFoundException, NullEntityIdentifierException {
     this.validateId(id, null);
 
     T entity = this.getDAO().findById(id).get();
     this.getDAO().delete(entity);
   }
 
+  /**
+   * Checks if an entity exists in the database, given an ID
+   * 
+   * @param id the entity's ID
+   * @return {@code true} if an entity with the given ID exists in the database; otherwise {@code false}
+   */
   public default boolean existsById(Long id) {
-    return this.findById(id).isPresent();
+    this.validateId(id, null);
+
+    return this.getDAO().existsById(id);
   }
 
+  /**
+   * Get all entities from the database
+   * 
+   * @return the full list of entities of this class
+   */
   public default List<T> findAll() {
     return this.getDAO().findAll();
   };
 
-  public default Optional<T> findById(Long id) {
-    if (StringUtils.isBlank(String.valueOf(id))) {
-      throw new DetachedEntityException();
+  /**
+   * Gets a page of this entity class, as per a given {@code paginationCriteria}
+   * 
+   * @param paginationCriteria the pagination criteria
+   * @return a Page that matches the {@code paginationCriteria}; all the entities collected in a page if the
+   *         {@code paginationCriteria} is {@code null}
+   */
+  public default Page<T> findAllPagedBy(Pageable paginationCriteria) {
+    return this.getDAO().findAll(paginationCriteria != null ? paginationCriteria : Pageable.unpaged());
+  }
+
+  /**
+   * Gets the full list of entities, ordered by the given {@code sortingCriteria}
+   * 
+   * @param sortingCriteria the sorting criteria
+   * @return The ordered list of all entities by the provided {@code sortingCriteria}; the unordered list if the
+   *         {@code sortingCriteria} is null
+   */
+  public default List<T> findAllSortedBy(Sort sortingCriteria) {
+    return this.getDAO().findAll(sortingCriteria != null ? sortingCriteria : Sort.unsorted());
+  }
+
+  /**
+   * Fetches an entity from the database by the given ID
+   * 
+   * @param id the entity's ID
+   * @return the entity, {@link Optional#empty()} if it not exists
+   * @throws NullEntityIdentifierException if the identifier is null
+   */
+  public default Optional<T> findById(Long id) throws NullEntityIdentifierException {
+    if (id == null) {
+      throw new NullEntityIdentifierException();
     }
 
     return this.getDAO().findById(id);
   }
 
+  /**
+   * Gets this manager's DAO. Convenience getter for implementing common methods in this class
+   * 
+   * @return the DAO
+   */
   public JpaRepository<T, Long> getDAO();
 
-  public default T save(T entity) throws RuntimeException {
+  /**
+   * Saves an entity and returns it with the generated ID to be used for further manipulation
+   * 
+   * @param entity the entity to be saved
+   * @return the persisted entity
+   */
+  public default T save(T entity) {
     Objects.requireNonNull(entity);
     return this.getDAO().save(entity);
   }
 
-  public default T update(T entity) throws RuntimeException {
+  /**
+   * Updates the DB reference to the given entity
+   * 
+   * @param entity the entity to be updated
+   * @return the updated entity
+   * @throws EntityNotFoundException if the entity does not exist
+   * @throws NullEntityIdentifierException if the identifier is null
+   */
+  public default T update(T entity) throws EntityNotFoundException, NullEntityIdentifierException {
     Objects.requireNonNull(entity);
 
     Long id = entity.getId();
@@ -89,9 +170,17 @@ public interface GenericManager<T extends ClarisaBaseEntity> {
     return this.save(entity);
   }
 
-  public default void validateId(Long id, T entity) throws RuntimeException {
-    if (StringUtils.isBlank(String.valueOf(id))) {
-      throw new DetachedEntityException();
+  /**
+   * Validates an ID
+   * 
+   * @param id an entity ID
+   * @param entity the entity (if possible) for its class
+   * @throws EntityNotFoundException if the entity does not exist
+   * @throws NullEntityIdentifierException if the identifier is null
+   */
+  public default void validateId(Long id, T entity) throws EntityNotFoundException, NullEntityIdentifierException {
+    if (id == null) {
+      throw new NullEntityIdentifierException();
     }
 
     if (this.getDAO().existsById(id) == false) {

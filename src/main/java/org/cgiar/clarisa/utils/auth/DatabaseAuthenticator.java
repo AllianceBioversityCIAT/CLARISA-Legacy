@@ -13,18 +13,30 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.exception;
+package org.cgiar.clarisa.utils.auth;
 
+import org.cgiar.clarisa.manager.AuthenticationManager;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**************
- * @author German C. Martinez - CIAT/CCAFS
+ * @author German C. Martinez - Alliance Bioversity/CIAT
  **************/
 
-public class DetachedEntityException extends RuntimeException {
+@Named("DatabaseAuth")
+public class DatabaseAuthenticator implements Authenticator {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = -5431156711929838419L;
+  private AuthenticationManager authenticationManager;
+
+  @Inject
+  public DatabaseAuthenticator(AuthenticationManager authenticationManager) {
+    this.authenticationManager = authenticationManager;
+  }
+
+  @Override
+  public LoginStatus authenticate(String email, String password) {
+    return this.authenticationManager.verifyCredentials(email, password);
+  }
 
 }

@@ -13,15 +13,33 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.manager;
+package org.cgiar.clarisa.dto;
 
-import org.cgiar.clarisa.utils.auth.LoginStatus;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
  **************/
 
-public interface AuthenticationManager {
+public class SearchUserDTO {
 
-  public LoginStatus verifyCredentials(String username, String password);
+  private String username;
+
+  private boolean isCgiarUser;
+
+
+  public boolean getIsCgiarUser() {
+    return isCgiarUser;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public void setIsCgiarUser(boolean isCgiarUser) {
+    this.isCgiarUser = isCgiarUser;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
 }

@@ -25,6 +25,8 @@ import java.util.Optional;
 
 public interface UserManager extends GenericManager<User> {
 
+  public void changePassword(String password, String username);
+
   public String getEmailFromUsername(String username);
 
   public Optional<User> getUserByUsername(String username);

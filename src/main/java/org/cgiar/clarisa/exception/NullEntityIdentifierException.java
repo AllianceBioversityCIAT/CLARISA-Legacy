@@ -13,13 +13,18 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.utils;
+package org.cgiar.clarisa.exception;
 
 
 /**************
- * @author German C. Martinez - Alliance Bioversity/CIAT
+ * @author German C. Martinez - CIAT/CCAFS
  **************/
 
-public enum LoginStatus {
-  LOGGED_SUCCESSFULLY, WRONG_CREDENTIALS, NOT_LOGGED, LDAP_ERROR
+public class NullEntityIdentifierException extends RuntimeException {
+
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -5431156711929838419L;
+
 }

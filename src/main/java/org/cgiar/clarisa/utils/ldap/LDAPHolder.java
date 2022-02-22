@@ -13,30 +13,53 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.utils;
+package org.cgiar.clarisa.utils.ldap;
 
-import org.cgiar.clarisa.manager.AuthenticationManager;
+import org.cgiar.ciat.auth.LDAPService;
+import org.cgiar.clarisa.config.AppConfig;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
  **************/
 
-@Named("DatabaseAuth")
-public class DatabaseAuthenticator implements Authenticator {
+@Named("LDAPHolder")
+public class LDAPHolder {
 
-  private AuthenticationManager authenticationManager;
+  // Logger
+  public static Logger LOG = LoggerFactory.getLogger(LDAPHolder.class);
+
+  private LDAPService ldapService;
+  private AppConfig appConfig;
 
   @Inject
-  public DatabaseAuthenticator(AuthenticationManager authenticationManager) {
-    this.authenticationManager = authenticationManager;
+  public LDAPHolder(AppConfig appConfig) {
+    this.appConfig = appConfig;
+    this.tryGetLDAPService();
   }
 
-  @Override
-  public LoginStatus authenticate(String email, String password) {
-    return this.authenticationManager.verifyCredentials(email, password);
+  public LDAPService getLdapService() {
+    return ldapService;
   }
 
+  private void tryGetLDAPService() {
+    try {
+      LDAPService service = new LDAPService();
+      if (appConfig.isProduction()) {
+        service.setInternalConnection(false);
+      } else {
+        service.setInternalConnection(true);
+      }
+
+      this.ldapService = service;
+    } catch (Exception e) {
+      LOG.error("Could not open a new LDAP connection. Cause: {}", e.getMessage());
+      this.ldapService = null;
+    }
+  }
 }

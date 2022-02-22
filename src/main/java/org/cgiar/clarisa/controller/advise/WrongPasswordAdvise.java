@@ -13,15 +13,27 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.manager;
+package org.cgiar.clarisa.controller.advise;
 
-import org.cgiar.clarisa.utils.auth.LoginStatus;
+import org.cgiar.clarisa.exception.NonMatchingPasswordsException;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
  **************/
 
-public interface AuthenticationManager {
+@ControllerAdvice
+public class WrongPasswordAdvise {
 
-  public LoginStatus verifyCredentials(String username, String password);
+  @ResponseBody
+  @ExceptionHandler(NonMatchingPasswordsException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  String notMatchingHandler(NonMatchingPasswordsException enfe) {
+    return enfe.getMessage();
+  }
 }

@@ -13,15 +13,42 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.manager;
+package org.cgiar.clarisa.dto;
 
-import org.cgiar.clarisa.utils.auth.LoginStatus;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
  **************/
 
-public interface AuthenticationManager {
+public class PasswordChangeDTO {
 
-  public LoginStatus verifyCredentials(String username, String password);
+  private String username;
+  private String oldPassword;
+  private String newPassword;
+
+
+  public String getNewPassword() {
+    return newPassword;
+  }
+
+  public String getOldPassword() {
+    return oldPassword;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+
+  public void setNewPassword(String newPassword) {
+    this.newPassword = newPassword;
+  }
+
+  public void setOldPassword(String oldPassword) {
+    this.oldPassword = oldPassword;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
 }

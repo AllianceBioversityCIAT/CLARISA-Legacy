@@ -23,10 +23,18 @@ import org.cgiar.clarisa.model.User;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface UserDAO extends JpaRepository<User, Long> {
+
+  @Modifying(flushAutomatically = true)
+  @Transactional
+  @Query("update User u set u.password = ?1 where u.email = ?2 or u.username = ?2")
+  public void changePassword(String password, String username);
 
   @Query("select u.email from User u where u.username = ?1")
   public String getEmailFromUsername(String username);

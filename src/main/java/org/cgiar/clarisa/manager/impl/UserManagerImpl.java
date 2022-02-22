@@ -48,6 +48,11 @@ public class UserManagerImpl implements UserManager {
   }
 
   @Override
+  public void changePassword(String password, String username) {
+    this.userDao.changePassword(password, username);
+  }
+
+  @Override
   public JpaRepository<User, Long> getDAO() {
 
     return this.userDao;

@@ -13,11 +13,10 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.utils;
+package org.cgiar.clarisa.utils.auth;
 
 import org.cgiar.ciat.auth.ADConexion;
-import org.cgiar.ciat.auth.LDAPService;
-import org.cgiar.clarisa.config.AppConfig;
+import org.cgiar.clarisa.utils.ldap.LDAPHolder;
 
 import javax.inject.Named;
 
@@ -34,10 +33,10 @@ public class LDAPAuthenticator implements Authenticator {
   // Logger
   public static Logger LOG = LoggerFactory.getLogger(LDAPAuthenticator.class);
 
-  private AppConfig appConfig;
+  private LDAPHolder ldapHolder;
 
-  public LDAPAuthenticator(AppConfig appConfig) {
-    this.appConfig = appConfig;
+  public LDAPAuthenticator(LDAPHolder ldapHolder) {
+    this.ldapHolder = ldapHolder;
   }
 
   @Override
@@ -46,14 +45,9 @@ public class LDAPAuthenticator implements Authenticator {
 
     try {
       ADConexion con = null;
-      LDAPService service = new LDAPService();
-      if (appConfig.isProduction()) {
-        service.setInternalConnection(false);
-      } else {
-        service.setInternalConnection(true);
-      }
 
-      con = service.authenticateUser(email, password);
+      // nullpointer if a connection to the active directory could not be established
+      con = this.ldapHolder.getLdapService().authenticateUser(email, password);
 
       if (con != null) {
         if (con.getLogin() != null) {
