@@ -20,7 +20,7 @@ package org.cgiar.clarisa.exception;
  * @author German C. Martinez - CIAT/CCAFS
  **************/
 
-public class DetachedEntityException extends RuntimeException {
+public class NullEntityIdentifierException extends RuntimeException {
 
   /**
    * 
