@@ -23,6 +23,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
@@ -51,6 +52,8 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
   private Integer order;
 
   private GlobalUnit globalUnit;
+
+  private List<Permission> rolePermissions;
 
 
   // relations
@@ -81,6 +84,7 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     return true;
   }
 
+
   @Column
   public String getAcronym() {
     return this.acronym;
@@ -95,11 +99,11 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     return this.getAcronym() + ", " + this.getDescription();
   }
 
-
   @Column
   public String getDescription() {
     return this.description;
   }
+
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "global_unit_id")
@@ -107,9 +111,17 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     return globalUnit;
   }
 
+
   @Column
   public Integer getOrder() {
     return order;
+  }
+
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(name = "role_permissions", joinColumns = @JoinColumn(name = "role_id"),
+    inverseJoinColumns = @JoinColumn(name = "permission_id"))
+  public List<Permission> getRolePermissions() {
+    return rolePermissions;
   }
 
   @ManyToMany(mappedBy = "userRoles")
@@ -125,7 +137,6 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     return result;
   }
 
-
   public void setAcronym(String acronym) {
     this.acronym = acronym;
   }
@@ -135,12 +146,17 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     this.description = description;
   }
 
+
   public void setGlobalUnit(GlobalUnit globalUnit) {
     this.globalUnit = globalUnit;
   }
 
   public void setOrder(Integer order) {
     this.order = order;
+  }
+
+  public void setRolePermissions(List<Permission> rolePermissions) {
+    this.rolePermissions = rolePermissions;
   }
 
   public void setRoleUsers(List<User> roleUsers) {
