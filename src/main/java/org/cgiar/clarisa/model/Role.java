@@ -117,7 +117,7 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
   }
 
 
-  @Column
+  @Column(insertable = false, updatable = false)
   public Integer getOrder() {
     return order;
   }

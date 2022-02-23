@@ -19,6 +19,8 @@
 
 package org.cgiar.clarisa.dto;
 
+import java.util.List;
+
 public class RoleDTO extends SimpleDTO {
 
 
@@ -29,6 +31,8 @@ public class RoleDTO extends SimpleDTO {
 
 
   private GlobalUnitDTO globalUnit;
+
+  private List<PermissionDTO> rolePermissions;
 
 
   public String getAcronym() {
@@ -46,6 +50,11 @@ public class RoleDTO extends SimpleDTO {
   }
 
 
+  public List<PermissionDTO> getRolePermissions() {
+    return rolePermissions;
+  }
+
+
   public void setAcronym(String acronym) {
     this.acronym = acronym;
   }
@@ -58,6 +67,11 @@ public class RoleDTO extends SimpleDTO {
 
   public void setGlobalUnit(GlobalUnitDTO globalUnit) {
     this.globalUnit = globalUnit;
+  }
+
+
+  public void setRolePermissions(List<PermissionDTO> rolePermissions) {
+    this.rolePermissions = rolePermissions;
   }
 
 
