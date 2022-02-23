@@ -41,6 +41,12 @@ public class Permission extends ClarisaBaseEntity implements java.io.Serializabl
 
   private List<Role> permissionRoles;
 
+  public void addRole(Role role) {
+    this.getPermissionRoles().add(role);
+    role.getRolePermissions().add(this);
+  }
+
+
   @Column
   public String getName() {
     return name;
@@ -53,14 +59,17 @@ public class Permission extends ClarisaBaseEntity implements java.io.Serializabl
   }
 
 
+  public void removeRole(Role role) {
+    this.getPermissionRoles().remove(role);
+    role.getRolePermissions().remove(this);
+  }
+
+
   public void setName(String name) {
     this.name = name;
   }
 
-
   public void setPermissionRoles(List<Role> permissionRoles) {
     this.permissionRoles = permissionRoles;
   }
-
-
 }

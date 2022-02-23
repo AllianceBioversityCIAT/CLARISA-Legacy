@@ -22,6 +22,7 @@ package org.cgiar.clarisa.controller;
 import org.cgiar.clarisa.dto.PermissionDTO;
 import org.cgiar.clarisa.dto.RoleDTO;
 import org.cgiar.clarisa.dto.RolePermissionDTO;
+import org.cgiar.clarisa.exception.UserNotFoundException;
 import org.cgiar.clarisa.manager.RoleManager;
 import org.cgiar.clarisa.manager.UserManager;
 import org.cgiar.clarisa.mapper.PermissionMapper;
@@ -44,9 +45,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/permissions")
+@RequestMapping("/rolepermissions")
 @CrossOrigin(origins = {"http://localhost:4200", "http://127.0.0.1:4200"})
-public class PermissionsController {
+public class RolePermissionsController {
 
   private UserManager userManager;
 
@@ -58,7 +59,7 @@ public class PermissionsController {
 
 
   @Inject
-  public PermissionsController(UserManager userManager, RoleManager roleManager, PermissionMapper permissionMapper,
+  public RolePermissionsController(UserManager userManager, RoleManager roleManager, PermissionMapper permissionMapper,
     RoleMapper roleMapper) {
     super();
     this.userManager = userManager;
@@ -71,9 +72,9 @@ public class PermissionsController {
   @GetMapping(value = "/rolePermission/{username}")
   public ResponseEntity<List<RolePermissionDTO>> getRolePermission(@PathVariable("username") String username) {
     List<RolePermissionDTO> rolePermissionDTO = new ArrayList<>();
-    Optional<User> user = userManager.getUserByUsername(username);
-    if (user.isPresent()) {
-      List<Role> roles = user.get().getUserRoles();
+    User user = userManager.getUserByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
+    if (user != null) {
+      List<Role> roles = user.getUserRoles();
       for (Role role : roles) {
         Optional<Role> objRole = roleManager.findById(role.getId());
         RolePermissionDTO rolePermission = new RolePermissionDTO();

@@ -64,6 +64,11 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
   }
 
 
+  public void addPermission(Permission permission) {
+    this.rolePermissions.add(permission);
+    permission.getPermissionRoles().add(this);
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
@@ -137,6 +142,12 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     return result;
   }
 
+  public void removePermission(Permission permission) {
+    this.rolePermissions.remove(permission);
+    permission.getPermissionRoles().remove(this);
+  }
+
+
   public void setAcronym(String acronym) {
     this.acronym = acronym;
   }
@@ -145,7 +156,6 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
   public void setDescription(String description) {
     this.description = description;
   }
-
 
   public void setGlobalUnit(GlobalUnit globalUnit) {
     this.globalUnit = globalUnit;
@@ -158,6 +168,7 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
   public void setRolePermissions(List<Permission> rolePermissions) {
     this.rolePermissions = rolePermissions;
   }
+
 
   public void setRoleUsers(List<User> roleUsers) {
     this.roleUsers = roleUsers;
