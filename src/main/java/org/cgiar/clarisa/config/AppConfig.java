@@ -49,6 +49,18 @@ public class AppConfig {
   @Value("${jwt.validUntil}")
   private Long jwtExpirationTime;
 
+  @Value("${application.cors.allowedUrls}")
+  private String allowedUrlsCrossOrigins;
+
+
+  public String getAllowedUrlsCrossOrigins() {
+    if (allowedUrlsCrossOrigins == null) {
+      LOG.error("There are no URL Cross-Origins configured");
+      return null;
+    }
+
+    return allowedUrlsCrossOrigins;
+  }
 
   public Integer getBcryptRounds() {
     if (bcryptRounds == null) {

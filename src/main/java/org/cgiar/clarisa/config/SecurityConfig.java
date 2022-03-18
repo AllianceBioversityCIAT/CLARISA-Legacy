@@ -18,9 +18,13 @@ package org.cgiar.clarisa.config;
 import org.cgiar.clarisa.exception.UserNotFoundException;
 import org.cgiar.clarisa.filters.JwtFilter;
 import org.cgiar.clarisa.manager.UserManager;
+import org.cgiar.clarisa.utils.GeneralUtils;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -39,6 +43,9 @@ import org.springframework.web.filter.CorsFilter;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+  // Logger
+  private static final Logger LOG = LoggerFactory.getLogger(SecurityConfig.class);
 
   private UserManager userManager;
 
@@ -79,8 +86,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(true);
-    config.addAllowedOrigin("http://localhost:4200");
-    config.addAllowedOrigin("http://127.0.0.1:4200");
+
+    String[] allowedOrigins = StringUtils.split(this.appConfig.getAllowedUrlsCrossOrigins(), ',');
+    if (GeneralUtils.emptyIfNull(allowedOrigins).length != 0) {
+      for (String allowed : allowedOrigins) {
+        if (StringUtils.isNotBlank(allowed)) {
+          config.addAllowedOrigin(allowed);
+        }
+      }
+
+      if (config.getAllowedOrigins() == null || config.getAllowedOrigins().isEmpty()) {
+        LOG.debug("There are no CORS specified");
+      }
+    } else {
+      LOG.debug("There are no CORS specified");
+    }
+
     config.addAllowedHeader("*");
     config.addAllowedMethod("*");
     source.registerCorsConfiguration("/**", config);
