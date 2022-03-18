@@ -84,17 +84,22 @@ public class LoginController {
     HttpStatus status = HttpStatus.OK;
     Authenticator authenticator = null;
 
-    if (appConfig.isLocal()) {
-      authenticator = appConfig.getContext().getBean(DatabaseAuthenticator.class);
-    } else {
-      authenticator = appConfig.getContext().getBean(LDAPAuthenticator.class);
-    }
-
     if (!StringUtils.contains(username, "@")) {
       username = this.userManager.getEmailFromUsername(username);
     }
 
     Optional<User> userOptional = this.userManager.getUserByUsername(username);
+
+    if (appConfig.isLocal()) {
+      authenticator = appConfig.getContext().getBean(DatabaseAuthenticator.class);
+    } else {
+      if (userOptional.isPresent() && userOptional.get().getCgiarUser()) {
+        authenticator = appConfig.getContext().getBean(LDAPAuthenticator.class);
+      } else {
+        authenticator = appConfig.getContext().getBean(DatabaseAuthenticator.class);
+      }
+    }
+
     if (userOptional.isPresent()) {
       User user = userOptional.get();
       userAutenticationDTO = new UserAuthenticationDTO();
