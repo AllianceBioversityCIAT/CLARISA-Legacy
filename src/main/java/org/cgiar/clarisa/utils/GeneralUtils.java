@@ -33,6 +33,10 @@ public class GeneralUtils {
     return set != null ? set : Collections.emptySet();
   }
 
+  public static <T> T[] emptyIfNull(T[] array) {
+    return array != null ? array : (T[]) new Object[0];
+  }
+
   /**
    * Null-safe way to get an object
    * 
