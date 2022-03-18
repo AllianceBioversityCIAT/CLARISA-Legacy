@@ -15,11 +15,14 @@
 package org.cgiar.clarisa.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -50,6 +53,9 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
   @Expose
   private Date added;
 
+  // relations
+  private List<LocElement> institutionLocations;
+
 
   public Institution() {
   }
@@ -74,10 +80,12 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
     return true;
   }
 
+
   @Column
   public String getAcronym() {
     return this.acronym;
   }
+
 
   @Column
   public Date getAdded() {
@@ -87,6 +95,13 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
   @Transient
   public String getComposedName() {
     return (this.acronym != null ? (StringUtils.trim(this.acronym) + " - ") : "") + StringUtils.trim(this.getName());
+  }
+
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(name = "institutions_locations", joinColumns = @JoinColumn(name = "institution_id"),
+    inverseJoinColumns = @JoinColumn(name = "loc_element_id"))
+  public List<LocElement> getInstitutionLocations() {
+    return institutionLocations;
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -105,13 +120,17 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
     return this.websiteLink;
   }
 
-
   public void setAcronym(String acronym) {
     this.acronym = acronym;
   }
 
+
   public void setAdded(Date added) {
     this.added = added;
+  }
+
+  public void setInstitutionLocations(List<LocElement> institutionLocations) {
+    this.institutionLocations = institutionLocations;
   }
 
   public void setInstitutionType(InstitutionType institutionType) {

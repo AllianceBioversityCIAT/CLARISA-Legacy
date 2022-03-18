@@ -28,10 +28,15 @@ import org.mapstruct.Mappings;
  * @author German C. Martinez - CIAT/CCAFS
  **************/
 
-@Mapper(componentModel = "jsr330", uses = {InstitutionTypeMapper.class})
+@Mapper(componentModel = "jsr330", uses = {InstitutionTypeMapper.class, LocElementMapper.class})
 public interface InstitutionMapper extends SimpleBaseMapper<Institution, InstitutionDTO> {
+
+  @Override
+  @Mappings({@Mapping(target = "locations", source = "institutionLocations")})
+  public InstitutionDTO entityToDto(Institution institution);
 
   @Override
   @Mappings({@Mapping(target = "name", expression = "java(entity.getComposedName())")})
   public SimpleDTO entityToSimpleDto(Institution entity, @Context Object dummy);
+
 }

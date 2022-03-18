@@ -15,6 +15,8 @@
 
 package org.cgiar.clarisa.dto;
 
+import java.util.List;
+
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
  **************/
@@ -25,6 +27,8 @@ public class InstitutionDTO extends SimpleDTO {
   private String acronym;
   private String websiteLink;
 
+  private List<LocElementDTO> locations;
+
 
   public InstitutionDTO() {
   }
@@ -34,21 +38,31 @@ public class InstitutionDTO extends SimpleDTO {
     return acronym;
   }
 
+
   public InstitutionTypeDTO getInstitutionType() {
     return institutionType;
+  }
+
+
+  public List<LocElementDTO> getLocations() {
+    return locations;
   }
 
   public String getWebsiteLink() {
     return websiteLink;
   }
 
-
   public void setAcronym(String acronym) {
     this.acronym = acronym;
   }
 
+
   public void setInstitutionType(InstitutionTypeDTO institutionTypeDTO) {
     this.institutionType = institutionTypeDTO;
+  }
+
+  public void setLocations(List<LocElementDTO> locations) {
+    this.locations = locations;
   }
 
   public void setWebsiteLink(String websiteLink) {

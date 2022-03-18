@@ -19,10 +19,13 @@
 
 package org.cgiar.clarisa.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -56,10 +59,15 @@ public class LocElement extends ClarisaBaseEntity implements java.io.Serializabl
 
   private LocGeoposition locGeoposition;
 
+  // relations
+  private List<Institution> locElementInstitutions;
+
+
   @Column(name = "iso_alpha_2")
   public String getIsoAlpha2() {
     return isoAlpha2;
   }
+
 
   @Column(name = "iso_alpha_3")
   public String getIsoAlpha3() {
@@ -69,6 +77,11 @@ public class LocElement extends ClarisaBaseEntity implements java.io.Serializabl
   @Column(name = "iso_numeric")
   public String getIsoNumeric() {
     return isoNumeric;
+  }
+
+  @ManyToMany(mappedBy = "institutionLocations")
+  public List<Institution> getLocElementInstitutions() {
+    return locElementInstitutions;
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -83,12 +96,13 @@ public class LocElement extends ClarisaBaseEntity implements java.io.Serializabl
     return locGeoposition;
   }
 
-
+  @Column
   public String getName() {
     return name;
   }
 
-
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "parent_id")
   public LocElement getParent() {
     return parent;
   }
@@ -103,8 +117,13 @@ public class LocElement extends ClarisaBaseEntity implements java.io.Serializabl
     this.isoAlpha3 = isoAlpha3;
   }
 
+
   public void setIsoNumeric(String isoNumeric) {
     this.isoNumeric = isoNumeric;
+  }
+
+  public void setLocElementInstitutions(List<Institution> locElementInstitutions) {
+    this.locElementInstitutions = locElementInstitutions;
   }
 
   public void setLocElementType(LocElementType locElementType) {
