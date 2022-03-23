@@ -27,7 +27,7 @@ public class InstitutionDTO extends SimpleDTO {
   private String acronym;
   private String websiteLink;
 
-  private List<LocElementDTO> locations;
+  private List<InstitutionLocationDTO> locations;
 
 
   public InstitutionDTO() {
@@ -44,7 +44,7 @@ public class InstitutionDTO extends SimpleDTO {
   }
 
 
-  public List<LocElementDTO> getLocations() {
+  public List<InstitutionLocationDTO> getLocations() {
     return locations;
   }
 
@@ -61,7 +61,7 @@ public class InstitutionDTO extends SimpleDTO {
     this.institutionType = institutionTypeDTO;
   }
 
-  public void setLocations(List<LocElementDTO> locations) {
+  public void setLocations(List<InstitutionLocationDTO> locations) {
     this.locations = locations;
   }
 

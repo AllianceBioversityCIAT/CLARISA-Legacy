@@ -21,13 +21,14 @@ package org.cgiar.clarisa.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -60,7 +61,7 @@ public class LocElement extends ClarisaBaseEntity implements java.io.Serializabl
   private LocGeoposition locGeoposition;
 
   // relations
-  private List<Institution> locElementInstitutions;
+  private List<InstitutionLocation> locElementInstitutions;
 
 
   @Column(name = "iso_alpha_2")
@@ -79,8 +80,8 @@ public class LocElement extends ClarisaBaseEntity implements java.io.Serializabl
     return isoNumeric;
   }
 
-  @ManyToMany(mappedBy = "institutionLocations")
-  public List<Institution> getLocElementInstitutions() {
+  @OneToMany(mappedBy = "locElement", cascade = CascadeType.ALL)
+  public List<InstitutionLocation> getLocElementInstitutions() {
     return locElementInstitutions;
   }
 
@@ -122,7 +123,7 @@ public class LocElement extends ClarisaBaseEntity implements java.io.Serializabl
     this.isoNumeric = isoNumeric;
   }
 
-  public void setLocElementInstitutions(List<Institution> locElementInstitutions) {
+  public void setLocElementInstitutions(List<InstitutionLocation> locElementInstitutions) {
     this.locElementInstitutions = locElementInstitutions;
   }
 

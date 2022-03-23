@@ -15,16 +15,17 @@
 package org.cgiar.clarisa.model;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -54,12 +55,18 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
   private Date added;
 
   // relations
-  private List<LocElement> institutionLocations;
+  private List<InstitutionLocation> institutionLocations;
 
 
   public Institution() {
   }
 
+
+  public void addLocElement(LocElement loc, Boolean headquarters) {
+    InstitutionLocation instLoc = new InstitutionLocation(this, loc, headquarters);
+    institutionLocations.add(instLoc);
+    loc.getLocElementInstitutions().add(instLoc);
+  }
 
   @Override
   public boolean equals(Object obj) {
@@ -80,7 +87,6 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
     return true;
   }
 
-
   @Column
   public String getAcronym() {
     return this.acronym;
@@ -97,10 +103,8 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
     return (this.acronym != null ? (StringUtils.trim(this.acronym) + " - ") : "") + StringUtils.trim(this.getName());
   }
 
-  @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(name = "institutions_locations", joinColumns = @JoinColumn(name = "institution_id"),
-    inverseJoinColumns = @JoinColumn(name = "loc_element_id"))
-  public List<LocElement> getInstitutionLocations() {
+  @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL)
+  public List<InstitutionLocation> getInstitutionLocations() {
     return institutionLocations;
   }
 
@@ -120,16 +124,29 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
     return this.websiteLink;
   }
 
+  public void removeLogElement(LocElement loc) {
+    for (Iterator<InstitutionLocation> iterator = institutionLocations.iterator(); iterator.hasNext();) {
+      InstitutionLocation instLoc = iterator.next();
+
+      if (instLoc.getInstitution().equals(this) && instLoc.getLocElement().equals(loc)) {
+        iterator.remove();
+        instLoc.getLocElement().getLocElementInstitutions().remove(instLoc);
+        instLoc.setLocElement(null);
+        instLoc.setInstitution(null);
+      }
+    }
+  }
+
+
   public void setAcronym(String acronym) {
     this.acronym = acronym;
   }
-
 
   public void setAdded(Date added) {
     this.added = added;
   }
 
-  public void setInstitutionLocations(List<LocElement> institutionLocations) {
+  public void setInstitutionLocations(List<InstitutionLocation> institutionLocations) {
     this.institutionLocations = institutionLocations;
   }
 
