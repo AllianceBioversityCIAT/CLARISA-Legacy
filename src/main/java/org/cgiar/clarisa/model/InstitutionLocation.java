@@ -20,42 +20,31 @@
 package org.cgiar.clarisa.model;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "institutions_locations")
-
-@NamedQuery(name = "InstitutionLocation.findAll", query = "SELECT il FROM InstitutionLocation il")
-public class InstitutionLocation implements java.io.Serializable {
+// @NamedQuery(name = "InstitutionLocation.findAll", query = "SELECT il FROM InstitutionLocation il")
+public class InstitutionLocation extends ClarisaBaseEntity implements java.io.Serializable {
 
   /**
    * S
    */
   private static final long serialVersionUID = 1L;
 
-  @EmbeddedId
-  private InstitutionLocationId id;
+  // @EmbeddedId
+  // private InstitutionLocationId id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @MapsId("institutionId")
-  @JoinColumn(name = "institution_id")
+
   private Institution institution;
 
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @MapsId("locElementId")
-  @JoinColumn(name = "loc_element_id")
   private LocElement locElement;
 
 
-  @Column(name = "is_headquater")
   private Boolean headquarter;
 
   public InstitutionLocation() {
@@ -69,17 +58,19 @@ public class InstitutionLocation implements java.io.Serializable {
     this.headquarter = headquarter;
   }
 
-
+  @Column(name = "is_headquater")
   public Boolean getHeadquarter() {
     return headquarter;
   }
 
-
+  @ManyToOne
+  @JoinColumn(name = "institution_id")
   public Institution getInstitution() {
     return institution;
   }
 
-
+  @ManyToOne
+  @JoinColumn(name = "loc_element_id")
   public LocElement getLocElement() {
     return locElement;
   }

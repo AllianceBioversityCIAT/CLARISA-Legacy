@@ -17,45 +17,15 @@
  * @author Diego Perez - CIAT/CCAFS
  **************/
 
-package org.cgiar.clarisa.model;
+package org.cgiar.clarisa.manager;
 
-import java.io.Serializable;
+import org.cgiar.clarisa.model.InstitutionLocation;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import java.util.List;
 
-@Embeddable
-public class InstitutionLocationId extends ClarisaBaseEntity implements Serializable {
-
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 1L;
+public interface InstitutionLocationManager extends GenericManager<InstitutionLocation> {
 
 
-  private Long institutionId;
-
-
-  private Long locElementId;
-
-  @Column(name = "institution_id")
-  public Long getInstitutionId() {
-    return institutionId;
-  }
-
-  @Column(name = "loc_element_id")
-  public Long getLocElementId() {
-    return locElementId;
-  }
-
-
-  public void setInstitutionId(Long institutionId) {
-    this.institutionId = institutionId;
-  }
-
-
-  public void setLocElementId(Long locElementId) {
-    this.locElementId = locElementId;
-  }
+  public List<InstitutionLocation> searchInstitutionLocation(Long institutionId);
 
 }

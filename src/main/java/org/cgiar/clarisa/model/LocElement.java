@@ -21,7 +21,6 @@ package org.cgiar.clarisa.model;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -80,7 +79,7 @@ public class LocElement extends ClarisaBaseEntity implements java.io.Serializabl
     return isoNumeric;
   }
 
-  @OneToMany(mappedBy = "locElement", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "locElement")
   public List<InstitutionLocation> getLocElementInstitutions() {
     return locElementInstitutions;
   }

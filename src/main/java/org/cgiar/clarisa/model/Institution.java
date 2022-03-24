@@ -14,11 +14,11 @@
  *****************************************************************/
 package org.cgiar.clarisa.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -63,6 +63,9 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
 
 
   public void addLocElement(LocElement loc, Boolean headquarters) {
+    if (institutionLocations == null) {
+      institutionLocations = new ArrayList<InstitutionLocation>();
+    }
     InstitutionLocation instLoc = new InstitutionLocation(this, loc, headquarters);
     institutionLocations.add(instLoc);
     loc.getLocElementInstitutions().add(instLoc);
@@ -93,7 +96,7 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
   }
 
 
-  @Column
+  @Column(insertable = false, updatable = false)
   public Date getAdded() {
     return this.added;
   }
@@ -103,7 +106,7 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
     return (this.acronym != null ? (StringUtils.trim(this.acronym) + " - ") : "") + StringUtils.trim(this.getName());
   }
 
-  @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "institution")
   public List<InstitutionLocation> getInstitutionLocations() {
     return institutionLocations;
   }
