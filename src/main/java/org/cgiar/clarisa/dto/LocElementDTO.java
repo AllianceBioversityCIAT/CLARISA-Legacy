@@ -19,12 +19,14 @@
 
 package org.cgiar.clarisa.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class LocElementDTO extends SimpleDTO {
 
+  @JsonInclude(JsonInclude.Include.NON_NULL)
   private String isoAlpha2;
 
-
+  @JsonInclude(JsonInclude.Include.NON_NULL)
   private String isoAlpha3;
 
 

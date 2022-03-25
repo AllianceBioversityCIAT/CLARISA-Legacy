@@ -21,5 +21,11 @@ package org.cgiar.clarisa.manager;
 
 import org.cgiar.clarisa.model.LocElement;
 
+import java.util.List;
+
 public interface LocElementManager extends GenericManager<LocElement> {
+
+  public List<LocElement> searchCountries();
+
+  public List<LocElement> searchRegions();
 }

@@ -23,6 +23,8 @@ import org.cgiar.clarisa.dao.LocElementDAO;
 import org.cgiar.clarisa.manager.LocElementManager;
 import org.cgiar.clarisa.model.LocElement;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.context.annotation.Scope;
@@ -45,5 +47,16 @@ public class LocElementManagerImpl implements LocElementManager {
   public JpaRepository<LocElement, Long> getDAO() {
 
     return this.locElementDAO;
+  }
+
+  @Override
+  public List<LocElement> searchCountries() {
+
+    return locElementDAO.searchCountries();
+  }
+
+  @Override
+  public List<LocElement> searchRegions() {
+    return locElementDAO.searchRegions();
   }
 }

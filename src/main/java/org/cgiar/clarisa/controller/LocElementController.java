@@ -27,11 +27,15 @@ import org.cgiar.clarisa.mapper.BaseMapper;
 import org.cgiar.clarisa.mapper.LocElementMapper;
 import org.cgiar.clarisa.model.LocElement;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,6 +65,18 @@ public class LocElementController extends GenericController<LocElement, LocEleme
   }
 
 
+  @GetMapping(value = "/countries")
+  public ResponseEntity<List<LocElementDTO>> findAllCountries() {
+    List<LocElement> resultList = this.manager.searchCountries();
+    return ResponseEntity.ok(this.mapper.entityListToDtoList(resultList));
+  }
+
+  @GetMapping(value = "/regions")
+  public ResponseEntity<List<LocElementDTO>> findAllRegions() {
+    List<LocElement> resultList = this.manager.searchRegions();
+    return ResponseEntity.ok(this.mapper.entityListToDtoList(resultList));
+  }
+
   @Override
   public Logger getClassLogger() {
     return LocElementController.LOG;
@@ -80,5 +96,6 @@ public class LocElementController extends GenericController<LocElement, LocEleme
   public ObjectMapper getObjectMapper() {
     return this.objectMapper;
   }
+
 
 }

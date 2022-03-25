@@ -21,8 +21,17 @@ package org.cgiar.clarisa.dao;
 
 import org.cgiar.clarisa.model.LocElement;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface LocElementDAO extends JpaRepository<LocElement, Long> {
+
+  @Query("select loc from LocElement loc where loc.locElementType.id = 2")
+  public List<LocElement> searchCountries();
+
+  @Query("select loc from LocElement loc where loc.locElementType.id = 1")
+  public List<LocElement> searchRegions();
 
 }
