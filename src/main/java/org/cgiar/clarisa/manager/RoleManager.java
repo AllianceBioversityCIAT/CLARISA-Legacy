@@ -27,4 +27,5 @@ public interface RoleManager extends GenericManager<Role> {
 
   public List<Role> findByGlobalUnit(Long globalUnit);
 
+  public Role findRoleByAcronym_GlobalUnit(String acronym, Long globalUnitId);
 }

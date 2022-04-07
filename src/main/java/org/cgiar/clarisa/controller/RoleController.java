@@ -37,6 +37,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -68,6 +69,13 @@ public class RoleController extends GenericController<Role, RoleDTO> {
   public ResponseEntity<List<RoleDTO>> findAllSimple(@PathVariable Long cgiarEntity) {
     List<Role> resultList = this.manager.findByGlobalUnit(cgiarEntity);
     return ResponseEntity.ok(this.mapper.entityListToDtoList(resultList));
+  }
+
+  @GetMapping(value = "/RoleByAcronym-CGIAREntity")
+  public ResponseEntity<RoleDTO> findByAcronymAndGlobalUnit(@RequestParam Long cgiarEntity,
+    @RequestParam String acronym) {
+    Role result = this.manager.findRoleByAcronym_GlobalUnit(acronym, cgiarEntity);
+    return ResponseEntity.ok(this.mapper.entityToDto(result));
   }
 
   @Override

@@ -28,7 +28,10 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface RoleDAO extends JpaRepository<Role, Long> {
 
-  @Query("select r from Role r where r.globalUnit= ?1")
+  @Query("select r from Role r where r.globalUnit.id= ?1")
   public List<Role> findByGlobalUnit(Long globalUnit);
+
+  @Query("select r from Role r where r.acronym= ?1 and r.globalUnit.id= ?2")
+  public Role findRoleByAcronym_GlobalUnit(String acronym, Long globalUnitId);
 
 }

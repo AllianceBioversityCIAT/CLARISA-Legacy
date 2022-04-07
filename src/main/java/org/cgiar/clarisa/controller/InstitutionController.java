@@ -85,7 +85,7 @@ public class InstitutionController extends GenericController<Institution, Instit
     this.insLocManager = insLocManager;
   }
 
-  @GetMapping(value = "/simple")
+  @GetMapping(value = "/public/all")
   public ResponseEntity<List<SimpleDTO>> findAllSimple() {
     List<Institution> resultList = this.manager.findAll();
     return ResponseEntity.ok(this.mapper.entityListToSimpleDtoList(resultList));
