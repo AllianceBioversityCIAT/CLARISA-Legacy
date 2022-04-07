@@ -23,7 +23,7 @@ import org.cgiar.clarisa.model.Role;
 
 import java.util.List;
 
-public interface RoleManager extends GenericManager<Role> {
+public interface RoleManager extends GenericSoftDeleteableManager<Role> {
 
   public List<Role> findByGlobalUnit(Long globalUnit);
 

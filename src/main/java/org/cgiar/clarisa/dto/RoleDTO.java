@@ -32,11 +32,19 @@ public class RoleDTO extends SimpleDTO {
 
   private GlobalUnitDTO globalUnit;
 
+  private Boolean active;
+
+
   private List<PermissionDTO> rolePermissions;
 
 
   public String getAcronym() {
     return acronym;
+  }
+
+
+  public Boolean getActive() {
+    return active;
   }
 
 
@@ -57,6 +65,11 @@ public class RoleDTO extends SimpleDTO {
 
   public void setAcronym(String acronym) {
     this.acronym = acronym;
+  }
+
+
+  public void setActive(Boolean active) {
+    this.active = active;
   }
 
 
