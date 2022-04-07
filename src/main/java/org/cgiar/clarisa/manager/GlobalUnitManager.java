@@ -21,6 +21,6 @@ package org.cgiar.clarisa.manager;
 
 import org.cgiar.clarisa.model.GlobalUnit;
 
-public interface GlobalUnitManager extends GenericManager<GlobalUnit> {
+public interface GlobalUnitManager extends GenericSoftDeleteableManager<GlobalUnit> {
 
 }

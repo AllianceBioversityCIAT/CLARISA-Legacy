@@ -28,9 +28,16 @@ public class GlobalUnitDTO extends SimpleDTO {
 
   private String officialCode;
 
+  private Boolean active;
+
 
   public String getAcronym() {
     return acronym;
+  }
+
+
+  public Boolean getActive() {
+    return active;
   }
 
 
@@ -47,6 +54,11 @@ public class GlobalUnitDTO extends SimpleDTO {
 
   public void setAcronym(String acronym) {
     this.acronym = acronym;
+  }
+
+
+  public void setActive(Boolean active) {
+    this.active = active;
   }
 
 

@@ -30,7 +30,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "global_units")
 @NamedQuery(name = "GlobalUnit.findAll", query = "SELECT g FROM GlobalUnit g")
-public class GlobalUnit extends ClarisaBaseEntity implements java.io.Serializable {
+public class GlobalUnit extends SoftDeleteableEntity implements java.io.Serializable {
 
   /**
    * 
