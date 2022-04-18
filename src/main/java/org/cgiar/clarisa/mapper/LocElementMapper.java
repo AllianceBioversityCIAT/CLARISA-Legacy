@@ -1,26 +1,31 @@
 /*****************************************************************
- * This file is part of CGIAR Level Agricultural Results
- * Interoperable System Architecture Platform (CLARISA).
- * CLARISA is free software: you can redistribute it and/or modify
+ * This file is part of Managing Agricultural Research for Learning &
+ * Outcomes Platform (MARLO).
+ * MARLO is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * at your option) any later version.
- * CLARISA is distributed in the hope that it will be useful,
+ * MARLO is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
- * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
+ * along with MARLO. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
 /**************
- * @author Diego Perez - Alliance Bioversity/CIAT
+ * @author Diego Perez - CIAT/CCAFS
  **************/
 
-package org.cgiar.clarisa.manager;
+package org.cgiar.clarisa.mapper;
 
-import org.cgiar.clarisa.model.GlobalUnit;
+import org.cgiar.clarisa.dto.LocElementDTO;
+import org.cgiar.clarisa.model.LocElement;
 
-public interface GlobalUnitManager extends GenericSoftDeleteableManager<GlobalUnit> {
+import org.mapstruct.Mapper;
+
+@Mapper(componentModel = "jsr330")
+public interface LocElementMapper extends BaseMapper<LocElement, LocElementDTO> {
+
 
 }

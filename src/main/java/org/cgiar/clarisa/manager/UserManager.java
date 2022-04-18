@@ -23,7 +23,7 @@ import org.cgiar.clarisa.model.User;
 
 import java.util.Optional;
 
-public interface UserManager extends GenericManager<User> {
+public interface UserManager extends GenericSoftDeleteableManager<User> {
 
   public void changePassword(String password, String username);
 

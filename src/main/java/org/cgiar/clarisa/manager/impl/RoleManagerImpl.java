@@ -53,6 +53,12 @@ public class RoleManagerImpl implements RoleManager {
   }
 
   @Override
+  public Role findRoleByAcronym_GlobalUnit(String acronym, Long globalUnitId) {
+
+    return this.roleDao.findRoleByAcronym_GlobalUnit(acronym, globalUnitId);
+  }
+
+  @Override
   public JpaRepository<Role, Long> getDAO() {
 
     return this.roleDao;

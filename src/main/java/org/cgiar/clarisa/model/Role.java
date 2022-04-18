@@ -38,7 +38,7 @@ import com.google.gson.annotations.Expose;
 @Entity
 @Table(name = "roles")
 @NamedQuery(name = "Role.findAll", query = "SELECT r FROM Role r")
-public class Role extends ClarisaBaseEntity implements java.io.Serializable {
+public class Role extends SoftDeleteableEntity implements java.io.Serializable {
 
   private static final long serialVersionUID = 8679238437361759448L;
 
@@ -68,6 +68,7 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     this.rolePermissions.add(permission);
     permission.getPermissionRoles().add(this);
   }
+
 
   @Override
   public boolean equals(Object obj) {
@@ -104,11 +105,11 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     return this.getAcronym() + ", " + this.getDescription();
   }
 
+
   @Column
   public String getDescription() {
     return this.description;
   }
-
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "global_unit_id")
@@ -121,6 +122,7 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
   public Integer getOrder() {
     return order;
   }
+
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "role_permissions", joinColumns = @JoinColumn(name = "role_id"),
@@ -146,7 +148,6 @@ public class Role extends ClarisaBaseEntity implements java.io.Serializable {
     this.rolePermissions.remove(permission);
     permission.getPermissionRoles().remove(this);
   }
-
 
   public void setAcronym(String acronym) {
     this.acronym = acronym;

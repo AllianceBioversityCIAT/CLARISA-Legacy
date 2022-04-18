@@ -1,37 +1,34 @@
 /*****************************************************************
- * This file is part of CGIAR Level Agricultural Results
- * Interoperable System Architecture (CLARISA).
- * CLARISA is free software: you can redistribute it and/or modify
+ * This file is part of Managing Agricultural Research for Learning &
+ * Outcomes Platform (MARLO).
+ * MARLO is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * at your option) any later version.
- * CLARISA is distributed in the hope that it will be useful,
+ * MARLO is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
- * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
+ * along with MARLO. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
 /**************
- * @author Diego Perez - Alliance Bioversity/CIAT
+ * @author Diego Perez - CIAT/CCAFS
  **************/
 
 package org.cgiar.clarisa.dao;
 
-import org.cgiar.clarisa.model.Role;
+import org.cgiar.clarisa.model.InstitutionLocation;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface RoleDAO extends JpaRepository<Role, Long> {
+public interface InstitutionLocationDAO extends JpaRepository<InstitutionLocation, Long> {
 
-  @Query("select r from Role r where r.globalUnit.id= ?1")
-  public List<Role> findByGlobalUnit(Long globalUnit);
-
-  @Query("select r from Role r where r.acronym= ?1 and r.globalUnit.id= ?2")
-  public Role findRoleByAcronym_GlobalUnit(String acronym, Long globalUnitId);
+  @Query("select il from InstitutionLocation il where il.institution.id = ?1")
+  public List<InstitutionLocation> searchInstitutionLocation(Long institutionId);
 
 }
