@@ -100,7 +100,8 @@ public class InstitutionController extends GenericController<Institution, Instit
     } else {
       return null;
     }
-    return ResponseEntity.ok(!manager.existsById(id));
+    boolean ok = !manager.existsById(id);
+    return ResponseEntity.ok(ok);
   }
 
   @GetMapping(value = "/public/all")
