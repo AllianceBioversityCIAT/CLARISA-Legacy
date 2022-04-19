@@ -65,15 +65,15 @@ public class RoleController extends GenericController<Role, RoleDTO> {
     this.mapper = mapper;
   }
 
-  @GetMapping(value = "/RoleByCGIAREntity/{cgiarEntity}")
+  @GetMapping(value = "/roleByCGIAREntity/{cgiarEntity}")
   public ResponseEntity<List<RoleDTO>> findAllSimple(@PathVariable Long cgiarEntity) {
     List<Role> resultList = this.manager.findByGlobalUnit(cgiarEntity);
     return ResponseEntity.ok(this.mapper.entityListToDtoList(resultList));
   }
 
-  @GetMapping(value = "/RoleByAcronym-CGIAREntity")
-  public ResponseEntity<RoleDTO> findByAcronymAndGlobalUnit(@RequestParam Long cgiarEntity,
-    @RequestParam String acronym) {
+  @GetMapping(value = "/getByParams")
+  public ResponseEntity<RoleDTO> findByAcronymAndGlobalUnit(@RequestParam("cgiarEntity") Long cgiarEntity,
+    @RequestParam("roleAcronym") String acronym) {
     Role result = this.manager.findRoleByAcronym_GlobalUnit(acronym, cgiarEntity);
     return ResponseEntity.ok(this.mapper.entityToDto(result));
   }
