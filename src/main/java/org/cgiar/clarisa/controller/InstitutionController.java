@@ -40,7 +40,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -83,6 +85,22 @@ public class InstitutionController extends GenericController<Institution, Instit
     this.locElementManager = locElementManager;
     this.insTypeManager = insTypeManager;
     this.insLocManager = insLocManager;
+  }
+
+  @Override
+  @DeleteMapping(value = "/delete/{id}")
+  public ResponseEntity<Boolean> deleteById(@PathVariable("id") Long id) {
+    Institution institution = manager.findById(id).orElse(null);
+    if (institution != null) {
+      List<InstitutionLocation> locationList = insLocManager.searchInstitutionLocation(institution.getId());
+      for (InstitutionLocation location : locationList) {
+        insLocManager.deleteById(location.getId());
+      }
+      manager.deleteById(institution.getId());
+    } else {
+      return null;
+    }
+    return ResponseEntity.ok(!manager.existsById(id));
   }
 
   @GetMapping(value = "/public/all")
