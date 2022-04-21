@@ -76,7 +76,7 @@ public class LoginController {
     return user;
   }
 
-  @CrossOrigin
+  
   @PostMapping(value = "/login")
   public ResponseEntity<UserAuthenticationDTO>
     userAuthentication(@RequestBody NewUserAuthenticationDTO newUserAuthenticationDTO) {
