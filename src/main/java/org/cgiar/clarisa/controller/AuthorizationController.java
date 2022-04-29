@@ -23,6 +23,7 @@ package org.cgiar.clarisa.controller;
 import org.cgiar.clarisa.config.AppConfig;
 import org.cgiar.clarisa.dto.NewUserAuthenticationDTO;
 import org.cgiar.clarisa.dto.RefreshTokenDTO;
+import org.cgiar.clarisa.dto.RefreshTokenRequestDTO;
 import org.cgiar.clarisa.dto.UserAuthenticationDTO;
 import org.cgiar.clarisa.exception.RefreshTokenException;
 import org.cgiar.clarisa.manager.RefreshTokenManager;
@@ -78,7 +79,8 @@ public class AuthorizationController {
   }
 
   @PostMapping("/refreshToken")
-  public ResponseEntity<RefreshTokenDTO> refreshtoken(@RequestBody String previousToken) {
+  public ResponseEntity<RefreshTokenDTO> refreshtoken(@RequestBody RefreshTokenRequestDTO previousTokenObject) {
+    String previousToken = previousTokenObject.getToken();
     return refreshTokenManager.findFromToken(previousToken).map(refreshTokenManager::verifyExpiration)
       .map(RefreshToken::getUser).map(user -> {
         String token = jwtTokenUtils.generateJWTToken(user);

@@ -13,22 +13,25 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.dao;
+package org.cgiar.clarisa.dto;
 
-import org.cgiar.clarisa.model.RefreshToken;
-
-import java.util.Optional;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
  **************/
 
-public interface RefreshTokenDAO extends JpaRepository<RefreshToken, Long> {
+public class RefreshTokenRequestDTO {
 
-  @Query("select rt from RefreshToken rt where rt.token = ?1")
-  public Optional<RefreshToken> findFromToken(String token);
+  private String token;
 
+  public RefreshTokenRequestDTO() {
+  }
+
+  public String getToken() {
+    return token;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
+  }
 }
