@@ -80,7 +80,7 @@ public class AuthorizationController {
 
   @PostMapping("/refreshToken")
   public ResponseEntity<RefreshTokenDTO> refreshtoken(@RequestBody RefreshTokenRequestDTO previousTokenObject) {
-    String previousToken = previousTokenObject.getToken();
+    String previousToken = previousTokenObject.getRefreshToken();
     return refreshTokenManager.findFromToken(previousToken).map(refreshTokenManager::verifyExpiration)
       .map(RefreshToken::getUser).map(user -> {
         String token = jwtTokenUtils.generateJWTToken(user);
