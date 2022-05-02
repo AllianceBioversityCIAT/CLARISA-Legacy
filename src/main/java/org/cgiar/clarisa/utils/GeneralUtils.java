@@ -27,7 +27,8 @@ public class GeneralUtils {
 
   /**
    * Returns an immutable empty list if the argument is null, or the argument itself otherwise.
-   * Please remember, as the list returned if the argument is null, do not use if you need to add elements to it, as you
+   * Please remember, as the list returned if the argument is null is immutable, do not use if you need to add elements
+   * to it, as you
    * will get an {@link UnsupportedOperationException}
    * 
    * @param <T> the list type
