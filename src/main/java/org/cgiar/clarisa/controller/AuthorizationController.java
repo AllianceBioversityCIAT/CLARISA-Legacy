@@ -22,9 +22,14 @@ package org.cgiar.clarisa.controller;
 
 import org.cgiar.clarisa.config.AppConfig;
 import org.cgiar.clarisa.dto.NewUserAuthenticationDTO;
+import org.cgiar.clarisa.dto.RefreshTokenDTO;
+import org.cgiar.clarisa.dto.RefreshTokenRequestDTO;
 import org.cgiar.clarisa.dto.UserAuthenticationDTO;
+import org.cgiar.clarisa.exception.RefreshTokenException;
+import org.cgiar.clarisa.manager.RefreshTokenManager;
 import org.cgiar.clarisa.manager.UserManager;
 import org.cgiar.clarisa.mapper.RoleMapper;
+import org.cgiar.clarisa.model.RefreshToken;
 import org.cgiar.clarisa.model.User;
 import org.cgiar.clarisa.utils.JwtUtils;
 import org.cgiar.clarisa.utils.auth.Authenticator;
@@ -49,11 +54,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
-public class LoginController {
+public class AuthorizationController {
 
-  private static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
+  private static final Logger LOG = LoggerFactory.getLogger(AuthorizationController.class);
 
   private UserManager userManager;
+  private RefreshTokenManager refreshTokenManager;
 
   private RoleMapper roleMapper;
 
@@ -62,12 +68,24 @@ public class LoginController {
   private AppConfig appConfig;
 
   @Inject
-  public LoginController(UserManager userManager, JwtUtils jwtTokenUtils, AppConfig appConfig, RoleMapper roleMapper) {
+  public AuthorizationController(UserManager userManager, JwtUtils jwtTokenUtils, AppConfig appConfig,
+    RoleMapper roleMapper, RefreshTokenManager refreshTokenManager) {
     super();
     this.userManager = userManager;
     this.jwtTokenUtils = jwtTokenUtils;
     this.appConfig = appConfig;
     this.roleMapper = roleMapper;
+    this.refreshTokenManager = refreshTokenManager;
+  }
+
+  @PostMapping("/refreshToken")
+  public ResponseEntity<RefreshTokenDTO> refreshtoken(@RequestBody RefreshTokenRequestDTO previousTokenObject) {
+    String previousToken = previousTokenObject.getRefreshToken();
+    return refreshTokenManager.findFromToken(previousToken).map(refreshTokenManager::verifyExpiration)
+      .map(RefreshToken::getUser).map(user -> {
+        String token = jwtTokenUtils.generateJWTToken(user);
+        return ResponseEntity.ok(new RefreshTokenDTO(token, previousToken));
+      }).orElseThrow(() -> new RefreshTokenException(RefreshTokenException.TOKEN_NOT_FOUND, previousToken));
   }
 
   @RequestMapping("/user")
@@ -108,6 +126,7 @@ public class LoginController {
       userAutenticationDTO.setLast_name(user.getLastName());
       userAutenticationDTO.setId(user.getId());
       userAutenticationDTO.setRoles(roleMapper.entityListToDtoList(user.getUserRoles()));
+      userAutenticationDTO.setRefreshToken(username);
     }
 
     loginStatus = authenticator.authenticate(username, newUserAuthenticationDTO.getPassword());
@@ -118,10 +137,12 @@ public class LoginController {
         // TODO
         break;
       case LOGGED_SUCCESSFULLY:
-        String token = this.jwtTokenUtils.generateJWTToken(userOptional.get());
+        String accessToken = this.jwtTokenUtils.generateJWTToken(userOptional.get());
+        RefreshToken refreshToken = this.refreshTokenManager.generateTokenForUser(userOptional.get());
         userAutenticationDTO.setAuthenticated(true);
-        userAutenticationDTO.setToken(token);
-        userAutenticationDTO.setExpiresIn(this.jwtTokenUtils.getExpirationMilis(token));
+        userAutenticationDTO.setToken(accessToken);
+        userAutenticationDTO.setRefreshToken(refreshToken.getToken());
+        userAutenticationDTO.setExpiresIn(this.jwtTokenUtils.getExpirationMilis(accessToken));
         break;
       case NOT_LOGGED:
       case WRONG_CREDENTIALS:

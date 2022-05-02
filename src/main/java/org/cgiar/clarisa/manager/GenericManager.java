@@ -24,6 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -99,7 +100,8 @@ public interface GenericManager<T extends ClarisaBaseEntity> {
   };
 
   /**
-   * Gets a page of this entity class, as per a given {@code paginationCriteria}
+   * Gets a page of this entity class, as per a given {@code paginationCriteria}.
+   * To create a custom {@code Pageable}, please use the {@link PageRequest#of()} method.
    * 
    * @param paginationCriteria the pagination criteria
    * @return a Page that matches the {@code paginationCriteria}; all the entities collected in a page if the

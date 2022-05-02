@@ -25,28 +25,53 @@ import java.util.Set;
 
 public class GeneralUtils {
 
+  /**
+   * Returns an immutable empty list if the argument is null, or the argument itself otherwise.
+   * Please remember, as the list returned if the argument is null is immutable, do not use if you need to add elements
+   * to it, as you
+   * will get an {@link UnsupportedOperationException}
+   * 
+   * @param <T> the list type
+   * @param list the list to be checked
+   * @return the argument itself if it is not null; {@link Collections#emptyList()} otherwise
+   */
   public static <T> List<T> emptyIfNull(List<T> list) {
     return list != null ? list : Collections.emptyList();
   }
 
+  /**
+   * Returns an immutable empty set if the argument is null, or the argument itself otherwise.
+   * Please remember, as the set returned if the argument is null is immutable, do not use if you need to add elements
+   * to it, as you will get an {@link UnsupportedOperationException}.
+   * 
+   * @param <T> the set type
+   * @param set the set to be checked
+   * @return the argument itself if it is not null; {@link Collections#emptySet()} otherwise
+   */
   public static <T> Set<T> emptyIfNull(Set<T> set) {
     return set != null ? set : Collections.emptySet();
   }
 
+  /**
+   * Returns an empty array if the argument is null, or the argument itself otherwise.
+   * 
+   * @param <T> the array type
+   * @param array the array to be checked
+   * @return the argument itself if it is not null; an empty array otherwise
+   */
   public static <T> T[] emptyIfNull(T[] array) {
     return array != null ? array : (T[]) new Object[0];
   }
 
-  /**
+  /*
    * Null-safe way to get an object
-   * 
    * @param <T> the object class
    * @param object the object
    * @param defaultObject the default object to be returned if the object is null
    * @return object if not null, else defaultObject
+   * public static <T> T getOrElse(T object, T defaultObject) {
+   * return object != null ? object : defaultObject;
+   * }
    */
-  public static <T> T getOrElse(T object, T defaultObject) {
-    return object != null ? object : defaultObject;
-  }
 
 }
