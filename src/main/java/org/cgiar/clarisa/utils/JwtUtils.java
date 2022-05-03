@@ -63,7 +63,7 @@ public class JwtUtils {
     String token = this.getJwtBuilder().setId("test").setSubject(user.getEmail())
       .claim("authorities",
         user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-      .setIssuedAt(new Date(now)).setExpiration(new Date(now + this.appConfig.getJwtExpirationTime())).compact();
+      .setIssuedAt(new Date(now)).setExpiration(new Date(now + this.appConfig.getAccessJwtExpirationTime())).compact();
 
     return token;
   }

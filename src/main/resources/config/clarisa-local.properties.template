@@ -29,11 +29,17 @@ spring.security.filter.order=10
 # secret key to sign the JWTs (obviously this should not be used at all)
 jwt.secret=mySecret
 
-# time (in milis) for a JWT to be valid (1 hour by default)
-jwt.validUntil=3600000
+# time (in milis) for a access JWT to be valid (1 hour by default)
+jwt.access.validFor=3600000
+
+#time (in milis) for a refresh JWT to be valid (1 day by default)
+jwt.refresh.validFor=86400000
 
 # the number of BCrypt rounds (6 by default)
 bcrypt.rounds=6
 
 # urls allowed for CORS (if your front app is on a different port, remember changing it below)
 application.cors.allowedUrls=http://localhost:4200,http://127.0.0.1:4200
+
+#LDAP connection active 
+ldap.active=true

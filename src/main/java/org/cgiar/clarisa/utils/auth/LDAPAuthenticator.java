@@ -16,6 +16,7 @@
 package org.cgiar.clarisa.utils.auth;
 
 import org.cgiar.ciat.auth.ADConexion;
+import org.cgiar.ciat.auth.LDAPUser;
 import org.cgiar.clarisa.utils.ldap.LDAPHolder;
 
 import javax.inject.Named;
@@ -47,7 +48,8 @@ public class LDAPAuthenticator implements Authenticator {
       ADConexion con = null;
 
       // nullpointer if a connection to the active directory could not be established
-      con = this.ldapHolder.getLdapService().authenticateUser(email, password);
+      LDAPUser ldapUser = this.ldapHolder.getLdapService().searchUserByEmail(email);
+      con = this.ldapHolder.getLdapService().authenticateUser(ldapUser.getLogin(), password);
 
       if (con != null) {
         if (con.getLogin() != null) {

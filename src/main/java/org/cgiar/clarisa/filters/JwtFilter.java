@@ -69,7 +69,7 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     // Get jwt token and validate
-    final String token = StringUtils.remove(header, "Bearer").trim();
+    final String token = StringUtils.removeStart(header, "Bearer").trim();
     boolean validToken = false;
     try {
       validToken = jwtTokenUtils.validate(token);

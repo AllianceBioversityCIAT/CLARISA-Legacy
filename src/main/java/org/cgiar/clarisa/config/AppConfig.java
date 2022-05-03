@@ -46,12 +46,27 @@ public class AppConfig {
   @Value("${jwt.secret}")
   private String jwtSecret;
 
-  @Value("${jwt.validUntil}")
-  private Long jwtExpirationTime;
+  @Value("${jwt.access.validFor}")
+  private Long accessJwtExpirationTime;
+
+  @Value("${jwt.refresh.validFor}")
+  private Long refreshJwtExpirationTime;
 
   @Value("${application.cors.allowedUrls}")
   private String allowedUrlsCrossOrigins;
 
+  @Value("${ldap.active}")
+  private Boolean ldap;
+
+
+  public Long getAccessJwtExpirationTime() {
+    if (accessJwtExpirationTime == null) {
+      LOG.error("There is no access JWT expiration time configured");
+      return null;
+    }
+
+    return accessJwtExpirationTime;
+  }
 
   public String getAllowedUrlsCrossOrigins() {
     if (allowedUrlsCrossOrigins == null) {
@@ -75,15 +90,6 @@ public class AppConfig {
     return context;
   }
 
-  public Long getJwtExpirationTime() {
-    if (jwtExpirationTime == null) {
-      LOG.error("There is no JWT expiration time configured");
-      return null;
-    }
-
-    return jwtExpirationTime;
-  }
-
   public String getJwtSecret() {
     if (jwtSecret == null) {
       LOG.error("There is no JWT secret configured");
@@ -93,6 +99,10 @@ public class AppConfig {
     return jwtSecret;
   }
 
+  public Boolean getLdap() {
+    return ldap;
+  }
+
   public String getProfile() {
     if (profile == null) {
       LOG.error("There is no Spring profile configured!!!");
@@ -100,6 +110,15 @@ public class AppConfig {
     }
 
     return profile;
+  }
+
+  public Long getRefreshJwtExpirationTime() {
+    if (refreshJwtExpirationTime == null) {
+      LOG.error("There is no refresh JWT expiration time configured");
+      return null;
+    }
+
+    return refreshJwtExpirationTime;
   }
 
   public boolean isDevelopment() {
