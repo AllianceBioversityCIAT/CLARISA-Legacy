@@ -27,8 +27,8 @@ public class RefreshTokenException extends RuntimeException {
    */
   private static final long serialVersionUID = 4311586124225844509L;
 
-  public static final String TOKEN_EXPIRED = "Refresh token %s is expired. Please make a new signin request!";
-  public static final String TOKEN_NOT_FOUND = "Refresh token %s is expired. Please make a new signin request!";
+  public static final String TOKEN_EXPIRED = "Refresh token %s is expired. Please make a new log-in request!";
+  public static final String TOKEN_NOT_FOUND = "Refresh token %s does not exist!";
 
   public RefreshTokenException() {
     super();
@@ -37,7 +37,7 @@ public class RefreshTokenException extends RuntimeException {
   public RefreshTokenException(String token) {
     this(TOKEN_EXPIRED, token);
   }
-  
+
   public RefreshTokenException(String message, String token) {
     super(String.format(message, token));
   }
