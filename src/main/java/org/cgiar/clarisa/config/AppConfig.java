@@ -55,6 +55,9 @@ public class AppConfig {
   @Value("${application.cors.allowedUrls}")
   private String allowedUrlsCrossOrigins;
 
+  @Value("${ldap.active}")
+  private Boolean ldap;
+
 
   public Long getAccessJwtExpirationTime() {
     if (accessJwtExpirationTime == null) {
@@ -94,6 +97,10 @@ public class AppConfig {
     }
 
     return jwtSecret;
+  }
+
+  public Boolean getLdap() {
+    return ldap;
   }
 
   public String getProfile() {

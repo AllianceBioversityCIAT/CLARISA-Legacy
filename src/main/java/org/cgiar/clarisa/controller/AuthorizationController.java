@@ -108,7 +108,7 @@ public class AuthorizationController {
 
     Optional<User> userOptional = this.userManager.getUserByUsername(username);
 
-    if (appConfig.isLocal()) {
+    if (!appConfig.getLdap()) {
       authenticator = appConfig.getContext().getBean(DatabaseAuthenticator.class);
     } else {
       if (userOptional.isPresent() && userOptional.get().getCgiarUser()) {

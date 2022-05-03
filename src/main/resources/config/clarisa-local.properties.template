@@ -40,3 +40,6 @@ bcrypt.rounds=6
 
 # urls allowed for CORS (if your front app is on a different port, remember changing it below)
 application.cors.allowedUrls=http://localhost:4200,http://127.0.0.1:4200
+
+#LDAP connection active 
+ldap.active=true
