@@ -15,13 +15,17 @@
 
 package org.cgiar.clarisa.controller.advise;
 
+import org.cgiar.clarisa.dto.APIErrorDTO;
 import org.cgiar.clarisa.exception.EntityNotFoundException;
+
+import java.util.Date;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.WebRequest;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
@@ -33,7 +37,8 @@ public class NotFoundAdvice {
   @ResponseBody
   @ExceptionHandler(EntityNotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  String notFoundHandler(EntityNotFoundException enfe) {
-    return enfe.getMessage();
+  APIErrorDTO<String> notFoundHandler(EntityNotFoundException enfe, WebRequest request) {
+    return new APIErrorDTO<String>(HttpStatus.FORBIDDEN.value(), new Date(), enfe.getMessage(),
+      request.getDescription(true));
   }
 }

@@ -16,13 +16,17 @@
 package org.cgiar.clarisa.controller.advise;
 
 
+import org.cgiar.clarisa.dto.APIErrorDTO;
 import org.cgiar.clarisa.exception.RefreshTokenException;
+
+import java.util.Date;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
 @RestControllerAdvice
 public class TokenAdvise {
@@ -30,7 +34,8 @@ public class TokenAdvise {
   @ResponseBody
   @ExceptionHandler(value = RefreshTokenException.class)
   @ResponseStatus(HttpStatus.FORBIDDEN)
-  public String handleTokenRefreshException(RefreshTokenException ex) {
-    return ex.getMessage();
+  APIErrorDTO<String> handleTokenRefreshException(RefreshTokenException rte, WebRequest request) {
+    return new APIErrorDTO<String>(HttpStatus.FORBIDDEN.value(), new Date(), rte.getMessage(),
+      request.getDescription(true));
   }
 }
