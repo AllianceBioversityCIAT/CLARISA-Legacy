@@ -94,7 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     config.setAllowCredentials(true);
 
     String[] allowedOrigins = StringUtils.split(this.appConfig.getAllowedUrlsCrossOrigins(), ',');
-    if (GeneralUtils.isEmpty(allowedOrigins)) {
+    if (GeneralUtils.isNotEmpty(allowedOrigins)) {
       for (String allowed : allowedOrigins) {
         if (StringUtils.isNotBlank(allowed)) {
           config.addAllowedOrigin(allowed);

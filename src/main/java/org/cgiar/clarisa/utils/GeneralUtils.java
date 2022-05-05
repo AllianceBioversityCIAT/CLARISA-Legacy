@@ -95,6 +95,39 @@ public class GeneralUtils {
     return array == null ? true : array.length == 0;
   }
 
+  /**
+   * Checks if the {@code list} argument is not empty. It takes care of null arguments by returning {@code false}
+   * 
+   * @param <T> the list type
+   * @param list the list to be checked
+   * @return {@code false} if the list is not null and not empty; {@code true} otherwise
+   */
+  public static <T> boolean isNotEmpty(List<T> list) {
+    return list == null ? false : !list.isEmpty();
+  }
+
+  /**
+   * Checks if the {@code set} argument is not empty. It takes care of null arguments by returning {@code false}
+   * 
+   * @param <T> the set type
+   * @param set the set to be checked
+   * @return {@code false} if the set is not null and not empty; {@code true} otherwise
+   */
+  public static <T> boolean isNotEmpty(Set<T> set) {
+    return set == null ? false : !set.isEmpty();
+  }
+
+  /**
+   * Checks if the {@code array} argument is not empty. It takes care of null arguments by returning {@code false}
+   * 
+   * @param <T> the array type
+   * @param array the array to be checked
+   * @return {@code false} if the array is not null and not empty; {@code true} otherwise
+   */
+  public static <T> boolean isNotEmpty(T[] array) {
+    return array == null ? false : array.length != 0;
+  }
+
   /*
    * Null-safe way to get an object
    * @param <T> the object class
