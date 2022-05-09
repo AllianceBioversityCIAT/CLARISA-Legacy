@@ -1,6 +1,6 @@
 ---
-name: 'User Story Template '
-about: Only for User Stories
+name: 'Issue Template '
+about: User Stories
 title: ''
 labels: ''
 assignees: ''
@@ -10,12 +10,24 @@ assignees: ''
 Description:
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
-**As** [a user persona], **I want** [to perform this action] **so that** [I can accomplish this goal]
 
-
-
-
+Add Screenshot
 -------------------------------------------------------------------------------
 
+Tasks:
+-------------------------------------------------------------------------------
+- [] Backend 
+- [] Migration
+- [] Frontend
 
-### **Acceptance Criteria**
+
+Deliverable or Expected outcome:
+-------------------------------------------------------------------------------
+
+- [] Service
+- [] Documentation
+- [] Website or section
+- [] Behavior
+
+Additional comments: 
+-------------------------------------------------------------------------------
