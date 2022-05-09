@@ -35,7 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 @Entity
 @Table(name = "institutions")
 @NamedQuery(name = "Institution.findAll", query = "SELECT i FROM Institution i")
-public class Institution extends ClarisaBaseEntity implements java.io.Serializable {
+public class Institution extends SoftDeleteableEntity implements java.io.Serializable {
 
   private static final long serialVersionUID = 3635585962414755020L;
 

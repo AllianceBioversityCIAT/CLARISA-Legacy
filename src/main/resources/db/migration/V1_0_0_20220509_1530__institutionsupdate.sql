@@ -1,0 +1,1 @@
+ALTER table institutions add column is_active tinyint(1) default 1;

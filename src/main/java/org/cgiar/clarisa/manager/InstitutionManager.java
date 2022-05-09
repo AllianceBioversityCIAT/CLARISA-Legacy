@@ -23,7 +23,7 @@ import java.util.List;
  * @author German C. Martinez - CIAT/CCAFS
  **************/
 
-public interface InstitutionManager extends GenericManager<Institution> {
+public interface InstitutionManager extends GenericSoftDeleteableManager<Institution> {
 
   /**
    * Search an institution, given a search value

@@ -125,8 +125,7 @@ public class AuthorizationController {
       userAutenticationDTO.setFirst_name(user.getFirstName());
       userAutenticationDTO.setLast_name(user.getLastName());
       userAutenticationDTO.setId(user.getId());
-      userAutenticationDTO.setRoles(roleMapper.entityListToDtoList(user.getUserRoles()));
-      userAutenticationDTO.setRefreshToken(username);
+
     }
 
     loginStatus = authenticator.authenticate(username, newUserAuthenticationDTO.getPassword());
@@ -137,11 +136,13 @@ public class AuthorizationController {
         // TODO
         break;
       case LOGGED_SUCCESSFULLY:
-        String accessToken = this.jwtTokenUtils.generateJWTToken(userOptional.get());
-        RefreshToken refreshToken = this.refreshTokenManager.generateTokenForUser(userOptional.get());
+        User user = userOptional.get();
+        String accessToken = this.jwtTokenUtils.generateJWTToken(user);
+        RefreshToken refreshToken = this.refreshTokenManager.generateTokenForUser(user);
         userAutenticationDTO.setAuthenticated(true);
         userAutenticationDTO.setToken(accessToken);
         userAutenticationDTO.setRefreshToken(refreshToken.getToken());
+        userAutenticationDTO.setRoles(roleMapper.entityListToDtoList(user.getUserRoles()));
         userAutenticationDTO.setExpiresIn(this.jwtTokenUtils.getExpirationMilis(accessToken));
         break;
       case NOT_LOGGED:
