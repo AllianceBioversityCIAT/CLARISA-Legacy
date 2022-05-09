@@ -16,18 +16,18 @@ Add Screenshot
 
 Tasks:
 -------------------------------------------------------------------------------
-- [] Backend 
-- [] Migration
-- [] Frontend
+- [ ] Backend 
+- [ ] Migration
+- [ ] Frontend
 
 
 Deliverable or Expected outcome:
 -------------------------------------------------------------------------------
 
-- [] Service
-- [] Documentation
-- [] Website or section
-- [] Behavior
+- [ ] Service
+- [ ] Documentation
+- [ ] Website or section
+- [ ] Behavior
 
 Additional comments: 
 -------------------------------------------------------------------------------
