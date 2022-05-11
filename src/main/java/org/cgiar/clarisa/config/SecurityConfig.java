@@ -16,7 +16,9 @@
 package org.cgiar.clarisa.config;
 
 import org.cgiar.clarisa.exception.UserNotFoundException;
+import org.cgiar.clarisa.filters.ExceptionFilter;
 import org.cgiar.clarisa.filters.JwtFilter;
+import org.cgiar.clarisa.filters.MultiReadRequestFilter;
 import org.cgiar.clarisa.filters.RequestFilter;
 import org.cgiar.clarisa.manager.UserManager;
 import org.cgiar.clarisa.utils.GeneralUtils;
@@ -56,13 +58,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final RequestFilter requestFilter;
 
+  private final MultiReadRequestFilter multiReadRequestFilter;
+
+  private final ExceptionFilter exceptionFilter;
+
   @Inject
   public SecurityConfig(JwtFilter jwtTokenFilter, UserManager userManager, AppConfig appConfig,
-    RequestFilter requestFilter) {
+    RequestFilter requestFilter, MultiReadRequestFilter multiReadRequestFilter, ExceptionFilter exceptionFilter) {
     this.jwtTokenFilter = jwtTokenFilter;
     this.userManager = userManager;
     this.appConfig = appConfig;
     this.requestFilter = requestFilter;
+    this.multiReadRequestFilter = multiReadRequestFilter;
+    this.exceptionFilter = exceptionFilter;
   }
 
   @Override
@@ -83,8 +91,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     http.authorizeRequests().antMatchers("/auth/**").permitAll().anyRequest().authenticated();
 
-    http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(multiReadRequestFilter, UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(jwtTokenFilter, MultiReadRequestFilter.class);
     http.addFilterBefore(requestFilter, JwtFilter.class);
+    http.addFilterBefore(exceptionFilter, RequestFilter.class);
   }
 
   @Bean
