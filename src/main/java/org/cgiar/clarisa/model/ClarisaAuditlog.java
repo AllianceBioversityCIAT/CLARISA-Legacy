@@ -43,12 +43,14 @@ public class ClarisaAuditlog extends ClarisaBaseEntity {
   private String httpMethod;
   private Long entityId;
   private String entityTable;
+  private String incomingJson;
   private String previousJson;
   private String updatedJson;
   private Date requestDate;
   private User requestedBy;
   private String modificationJustification;
   private boolean wasSuccessful;
+  private String failingCause;
 
 
   @Override
@@ -88,9 +90,19 @@ public class ClarisaAuditlog extends ClarisaBaseEntity {
     return entityTable;
   }
 
+  @Column(name = "failing_cause")
+  public String getFailingCause() {
+    return failingCause;
+  }
+
   @Column(name = "http_method")
   public String getHttpMethod() {
     return httpMethod;
+  }
+
+  @Column(name = "incoming_json")
+  public String getIncomingJson() {
+    return incomingJson;
   }
 
   @Column(name = "modification_justification")
@@ -136,8 +148,16 @@ public class ClarisaAuditlog extends ClarisaBaseEntity {
     this.entityTable = entityTable;
   }
 
+  public void setFailingCause(String failingCause) {
+    this.failingCause = failingCause;
+  }
+
   public void setHttpMethod(String httpMethod) {
     this.httpMethod = httpMethod;
+  }
+
+  public void setIncomingJson(String incomingJson) {
+    this.incomingJson = incomingJson;
   }
 
   public void setModificationJustification(String modificationJustification) {
@@ -168,6 +188,7 @@ public class ClarisaAuditlog extends ClarisaBaseEntity {
   public String toString() {
     return "ClarisaAuditlog [id=" + this.getId() + ", endpoint=" + this.endpoint + ", httpMethod=" + this.httpMethod
       + ", entityId=" + this.entityId + ", entityTable=" + this.entityTable + ", requestDate=" + this.requestDate
-      + ", modificationJustification=" + this.modificationJustification + ", wasSuccessful=" + this.wasSuccessful + "]";
+      + ", modificationJustification=" + this.modificationJustification + ", wasSuccessful=" + this.wasSuccessful
+      + ", failingCause=" + this.failingCause + "]";
   }
 }
