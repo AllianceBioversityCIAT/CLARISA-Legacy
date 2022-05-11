@@ -26,21 +26,21 @@ public class APIErrorDTO<T> {
   private int statusCode;
   private Date timestamp;
   private T body;
-  private String description;
+  private String path;
 
-  public APIErrorDTO(int statusCode, Date timestamp, T body, String description) {
+  public APIErrorDTO(int statusCode, Date timestamp, T body, String path) {
     this.statusCode = statusCode;
     this.timestamp = timestamp;
     this.body = body;
-    this.description = description;
+    this.path = path;
   }
 
   public T getBody() {
     return body;
   }
 
-  public String getDescription() {
-    return description;
+  public String getPath() {
+    return path;
   }
 
   public int getStatusCode() {
