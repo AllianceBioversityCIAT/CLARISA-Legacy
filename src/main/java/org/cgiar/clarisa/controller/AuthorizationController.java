@@ -37,7 +37,6 @@ import org.cgiar.clarisa.utils.auth.DatabaseAuthenticator;
 import org.cgiar.clarisa.utils.auth.LDAPAuthenticator;
 import org.cgiar.clarisa.utils.auth.LoginStatus;
 
-import java.security.Principal;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -86,11 +85,6 @@ public class AuthorizationController {
         String token = jwtTokenUtils.generateJWTToken(user);
         return ResponseEntity.ok(new RefreshTokenDTO(token, previousToken));
       }).orElseThrow(() -> new RefreshTokenException(RefreshTokenException.TOKEN_NOT_FOUND, previousToken));
-  }
-
-  @RequestMapping("/user")
-  public Principal user(Principal user) {
-    return user;
   }
 
   @PostMapping(value = "/login")
@@ -149,7 +143,7 @@ public class AuthorizationController {
         status = HttpStatus.FORBIDDEN;
         break;
       default:
-        LOG.error("Unexpected Error");
+        LOG.error("Unexpected Error: {}", loginStatus);
         break;
     }
 

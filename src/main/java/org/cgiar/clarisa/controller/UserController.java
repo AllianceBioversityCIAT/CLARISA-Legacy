@@ -36,12 +36,15 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -142,14 +145,16 @@ public class UserController extends GenericController<User, UserDTO> {
   }
 
   @Override
-  public ResponseEntity<UserDTO> save(@RequestBody UserDTO dto) {
+  public ResponseEntity<UserDTO> save(@RequestBody UserDTO dto, HttpServletRequest request,
+    HttpServletResponse response, @AuthenticationPrincipal User user) {
     BCryptPasswordEncoder encoder = appConfig.getContext().getBean(BCryptPasswordEncoder.class);
     dto.setPassword(encoder.encode(dto.getPassword()));
-    return super.save(dto);
+    return super.save(dto, request, response, user);
   }
 
   @Override
-  public ResponseEntity<UserDTO> update(@RequestBody UserDTO dto) {
+  public ResponseEntity<UserDTO> update(@RequestBody UserDTO dto, HttpServletRequest request,
+    HttpServletResponse response, @AuthenticationPrincipal User user) {
     User previousUser = this.manager.findById(dto.getId()).orElseThrow(() -> new UserNotFoundException());
     if (StringUtils.isEmpty(dto.getPassword())) {
       dto.setPassword(previousUser.getPassword());
@@ -157,7 +162,7 @@ public class UserController extends GenericController<User, UserDTO> {
       BCryptPasswordEncoder encoder = appConfig.getContext().getBean(BCryptPasswordEncoder.class);
       dto.setPassword(encoder.encode(dto.getPassword()));
     }
-    return super.update(dto);
+    return super.update(dto, request, response, user);
   }
 
   @PostMapping(value = "/passwordChange")

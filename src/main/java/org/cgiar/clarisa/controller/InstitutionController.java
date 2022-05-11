@@ -30,16 +30,20 @@ import org.cgiar.clarisa.model.Institution;
 import org.cgiar.clarisa.model.InstitutionLocation;
 import org.cgiar.clarisa.model.InstitutionType;
 import org.cgiar.clarisa.model.LocElement;
+import org.cgiar.clarisa.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -113,7 +117,8 @@ public class InstitutionController extends GenericController<Institution, Instit
 
   @Override
   @PostMapping(value = "/save")
-  public ResponseEntity<InstitutionDTO> save(@RequestBody InstitutionDTO dto) {
+  public ResponseEntity<InstitutionDTO> save(@RequestBody InstitutionDTO dto, HttpServletRequest request,
+    HttpServletResponse response, @AuthenticationPrincipal User user) {
     Institution institution = new Institution();
     institution.setAcronym(dto.getAcronym());
     InstitutionType insType = insTypeManager.findById(dto.getInstitutionType().getId()).orElse(null);
@@ -140,7 +145,8 @@ public class InstitutionController extends GenericController<Institution, Instit
 
   @Override
   @PutMapping(value = "/update")
-  public ResponseEntity<InstitutionDTO> update(@RequestBody InstitutionDTO dto) {
+  public ResponseEntity<InstitutionDTO> update(@RequestBody InstitutionDTO dto, HttpServletRequest request,
+    HttpServletResponse response, @AuthenticationPrincipal User user) {
 
     Institution institution = manager.findById(dto.getId()).orElse(null);
     if (institution != null) {
