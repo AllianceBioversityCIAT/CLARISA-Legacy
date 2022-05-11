@@ -37,7 +37,8 @@ public class HibernateTableNameResolver {
   private EntityManager entityManager;
 
   /**
-   * Gets the name of the table linked to the {@code modelClazz}
+   * Gets the name of the table linked to the {@code modelClazz}. Thanks to Antoine Meyer on
+   * {@link https://stackoverflow.com/a/66802699}
    * 
    * @param modelClazz the class to be used for the lookup
    * @return a {@code String} representing the name of the table in the database of the argument
