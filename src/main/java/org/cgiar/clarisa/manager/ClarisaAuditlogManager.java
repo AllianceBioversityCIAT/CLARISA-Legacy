@@ -15,12 +15,61 @@
 
 package org.cgiar.clarisa.manager;
 
+import org.cgiar.clarisa.dto.BaseDTO;
 import org.cgiar.clarisa.model.ClarisaAuditlog;
+import org.cgiar.clarisa.model.ClarisaBaseEntity;
+import org.cgiar.clarisa.model.User;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
  **************/
 
 public interface ClarisaAuditlogManager extends GenericManager<ClarisaAuditlog> {
+
+  /**
+   * Add to the database the Service request information. This method is meant to be used for GET requests
+   * 
+   * @param request - The HTTP Request
+   * @param response - The HTTP Response object
+   * @param user - the user trying to make the transaction
+   * @param successful - this transaction was successful
+   * @return
+   */
+  public default <ENTITY extends ClarisaBaseEntity> ClarisaAuditlog registerAuditlog(HttpServletRequest request,
+    User user, Class<ENTITY> entityClazz, boolean successful) {
+    return this.registerAuditlog(request, user, entityClazz, null, null, null, null, successful, null);
+  }
+
+  /**
+   * Add to the database the Service request information
+   * 
+   * @param request - The HTTP Request
+   * @param response - The HTTP Response object
+   * @param user - the user trying to make the transaction
+   * @param previous - the previous entity, before any modification
+   * @param updated - the modified entity
+   * @param id - the id of the entity to be modified
+   * @param successful - this transaction was successful?
+   */
+  public <ENTITY extends ClarisaBaseEntity, DTO extends BaseDTO> ClarisaAuditlog registerAuditlog(
+    HttpServletRequest request, User user, Class<ENTITY> entityClazz, Object incoming, DTO previous, DTO updated,
+    Long id, boolean successful, Exception failingCause);
+
+  /**
+   * Add to the database the Service request information. This method is meant to be used for DELETE requests
+   * 
+   * @param request - The HTTP Request
+   * @param response - The HTTP Response object
+   * @param user - the user trying to make the transaction
+   * @param successful - this transaction was successful
+   * @return
+   */
+  public default <ENTITY extends ClarisaBaseEntity, DTO extends BaseDTO> ClarisaAuditlog registerAuditlog(
+    HttpServletRequest request, User user, Class<ENTITY> entityClazz, Object incoming, DTO previous, Long id,
+    boolean successful) {
+    return this.registerAuditlog(request, user, entityClazz, incoming, previous, null, id, successful, null);
+  }
 
 }
