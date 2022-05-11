@@ -15,27 +15,37 @@
 
 package org.cgiar.clarisa.controller.advise;
 
-
 import org.cgiar.clarisa.dto.APIErrorDTO;
 import org.cgiar.clarisa.exception.RefreshTokenException;
 
 import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 
 @RestControllerAdvice
 public class TokenAdvise {
 
+
   @ResponseBody
   @ExceptionHandler(value = RefreshTokenException.class)
   @ResponseStatus(HttpStatus.FORBIDDEN)
-  APIErrorDTO<String> handleTokenRefreshException(RefreshTokenException rte, WebRequest request) {
-    return new APIErrorDTO<String>(HttpStatus.FORBIDDEN.value(), new Date(), rte.getMessage(),
-      request.getDescription(true));
+  APIErrorDTO<String> handleTokenRefreshException(RefreshTokenException rte, HttpServletRequest request) {
+    String url = request.getServletPath();
+    String queryString = request.getQueryString();
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append(url);
+    if (queryString != null) {
+      stringBuilder.append("?").append(queryString);
+    }
+
+    String requestUrl = stringBuilder.toString();
+    return new APIErrorDTO<String>(HttpStatus.FORBIDDEN.value(), new Date(), rte.getMessage(), requestUrl);
   }
+
 }
