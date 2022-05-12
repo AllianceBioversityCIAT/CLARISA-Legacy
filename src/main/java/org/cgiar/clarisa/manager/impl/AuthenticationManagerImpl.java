@@ -16,6 +16,7 @@
 package org.cgiar.clarisa.manager.impl;
 
 import org.cgiar.clarisa.config.AppConfig;
+import org.cgiar.clarisa.config.LegacyPasswordEncoder;
 import org.cgiar.clarisa.manager.AuthenticationManager;
 import org.cgiar.clarisa.manager.UserManager;
 import org.cgiar.clarisa.model.User;
@@ -26,7 +27,6 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**************
@@ -52,7 +52,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     LoginStatus loginStatus = LoginStatus.NOT_LOGGED;
     Optional<User> userOptional = this.userManager.getUserByUsername(username);
     if (userOptional.isPresent()) {
-      BCryptPasswordEncoder encoder = appConfig.getContext().getBean(BCryptPasswordEncoder.class);
+      LegacyPasswordEncoder encoder = appConfig.getContext().getBean(LegacyPasswordEncoder.class);
       if (encoder.matches(password, userOptional.get().getPassword())) {
         loginStatus = LoginStatus.LOGGED_SUCCESSFULLY;
       } else {
