@@ -43,8 +43,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -93,7 +93,8 @@ public class InstitutionController extends GenericController<Institution, Instit
 
   @Override
   @DeleteMapping(value = "/delete/{id}")
-  public ResponseEntity<Boolean> deleteById(@PathVariable("id") Long id) {
+  public ResponseEntity<Boolean> deleteById(@PathVariable("id") Long id, HttpServletRequest request,
+    HttpServletResponse response, @AuthenticationPrincipal User use) {
     Institution institution = manager.findById(id).orElse(null);
     if (institution != null) {
       List<InstitutionLocation> locationList = insLocManager.searchInstitutionLocation(institution.getId());
