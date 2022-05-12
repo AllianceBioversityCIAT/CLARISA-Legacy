@@ -13,40 +13,22 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.exception;
+package org.cgiar.clarisa.utils.auth;
 
+import org.cgiar.clarisa.model.User;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
  **************/
 
-public class RefreshTokenException extends RuntimeException {
+@Component
+public class AuthHolderImpl implements AuthHolder {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 4311586124225844509L;
-
-  public static final String TOKEN_EXPIRED = "Refresh token %s is expired. Please make a new log-in request!";
-  public static final String TOKEN_NOT_FOUND = "Refresh token %s does not exist!";
-
-  public RefreshTokenException() {
-    super();
-  }
-
-  public RefreshTokenException(String token) {
-    this(TOKEN_EXPIRED, token);
-  }
-
-  public RefreshTokenException(String message, String token) {
-    super(String.format(message, token));
-  }
-
-  public RefreshTokenException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
-  public RefreshTokenException(Throwable cause) {
-    super(cause);
+  @Override
+  public User getCurrentUser() {
+    return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
   }
 }

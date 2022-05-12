@@ -15,13 +15,17 @@
 
 package org.cgiar.clarisa.controller.advise;
 
+import org.cgiar.clarisa.dto.APIErrorDTO;
 import org.cgiar.clarisa.exception.NonMatchingPasswordsException;
+
+import java.util.Date;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.WebRequest;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
@@ -32,8 +36,9 @@ public class WrongPasswordAdvise {
 
   @ResponseBody
   @ExceptionHandler(NonMatchingPasswordsException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  String notMatchingHandler(NonMatchingPasswordsException enfe) {
-    return enfe.getMessage();
+  @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+  APIErrorDTO<String> notMatchingHandler(NonMatchingPasswordsException nmpe, WebRequest request) {
+    return new APIErrorDTO<String>(HttpStatus.UNPROCESSABLE_ENTITY.value(), new Date(), nmpe.getMessage(),
+      request.getDescription(true));
   }
 }

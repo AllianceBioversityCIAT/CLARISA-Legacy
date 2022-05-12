@@ -16,7 +16,9 @@
 package org.cgiar.clarisa.config;
 
 import org.cgiar.clarisa.exception.UserNotFoundException;
+import org.cgiar.clarisa.filters.ExceptionFilter;
 import org.cgiar.clarisa.filters.JwtFilter;
+import org.cgiar.clarisa.filters.MultiReadRequestFilter;
 import org.cgiar.clarisa.filters.RequestFilter;
 import org.cgiar.clarisa.manager.UserManager;
 import org.cgiar.clarisa.utils.GeneralUtils;
@@ -32,7 +34,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -56,13 +57,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final RequestFilter requestFilter;
 
+  private final MultiReadRequestFilter multiReadRequestFilter;
+
+  private final ExceptionFilter exceptionFilter;
+
   @Inject
   public SecurityConfig(JwtFilter jwtTokenFilter, UserManager userManager, AppConfig appConfig,
-    RequestFilter requestFilter) {
+    RequestFilter requestFilter, MultiReadRequestFilter multiReadRequestFilter, ExceptionFilter exceptionFilter) {
     this.jwtTokenFilter = jwtTokenFilter;
     this.userManager = userManager;
     this.appConfig = appConfig;
     this.requestFilter = requestFilter;
+    this.multiReadRequestFilter = multiReadRequestFilter;
+    this.exceptionFilter = exceptionFilter;
   }
 
   @Override
@@ -83,8 +90,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     http.authorizeRequests().antMatchers("/auth/**").permitAll().anyRequest().authenticated();
 
-    http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(multiReadRequestFilter, UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(jwtTokenFilter, MultiReadRequestFilter.class);
     http.addFilterBefore(requestFilter, JwtFilter.class);
+    http.addFilterBefore(exceptionFilter, RequestFilter.class);
   }
 
   @Bean
@@ -94,7 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     config.setAllowCredentials(true);
 
     String[] allowedOrigins = StringUtils.split(this.appConfig.getAllowedUrlsCrossOrigins(), ',');
-    if (GeneralUtils.emptyIfNull(allowedOrigins).length != 0) {
+    if (GeneralUtils.isNotEmpty(allowedOrigins)) {
       for (String allowed : allowedOrigins) {
         if (StringUtils.isNotBlank(allowed)) {
           config.addAllowedOrigin(allowed);
@@ -115,8 +124,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  public BCryptPasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder(appConfig.getBcryptRounds());
+  public LegacyPasswordEncoder passwordEncoder() {
+    return new LegacyPasswordEncoderImpl(appConfig.getBcryptRounds());
   }
 
 }

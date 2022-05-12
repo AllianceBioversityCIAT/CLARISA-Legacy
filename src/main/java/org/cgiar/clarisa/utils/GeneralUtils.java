@@ -28,8 +28,7 @@ public class GeneralUtils {
   /**
    * Returns an immutable empty list if the argument is null, or the argument itself otherwise.
    * Please remember, as the list returned if the argument is null is immutable, do not use if you need to add elements
-   * to it, as you
-   * will get an {@link UnsupportedOperationException}
+   * to it, as you will get an {@link UnsupportedOperationException}
    * 
    * @param <T> the list type
    * @param list the list to be checked
@@ -61,6 +60,72 @@ public class GeneralUtils {
    */
   public static <T> T[] emptyIfNull(T[] array) {
     return array != null ? array : (T[]) new Object[0];
+  }
+
+  /**
+   * Checks if the {@code list} argument is empty. It takes care of null arguments by returning {@code true}
+   * 
+   * @param <T> the list type
+   * @param list the list to be checked
+   * @return {@code true} if the list is null or empty; {@code false} otherwise
+   */
+  public static <T> boolean isEmpty(List<T> list) {
+    return list == null ? true : list.isEmpty();
+  }
+
+  /**
+   * Checks if the {@code set} argument is empty. It takes care of null arguments by returning {@code true}
+   * 
+   * @param <T> the set type
+   * @param set the set to be checked
+   * @return {@code true} if the set is null or empty; {@code false} otherwise
+   */
+  public static <T> boolean isEmpty(Set<T> set) {
+    return set == null ? true : set.isEmpty();
+  }
+
+  /**
+   * Checks if the {@code array} argument is empty. It takes care of null arguments by returning {@code true}
+   * 
+   * @param <T> the array type
+   * @param array the array to be checked
+   * @return {@code true} if the array is null or empty; {@code false} otherwise
+   */
+  public static <T> boolean isEmpty(T[] array) {
+    return array == null ? true : array.length == 0;
+  }
+
+  /**
+   * Checks if the {@code list} argument is not empty. It takes care of null arguments by returning {@code false}
+   * 
+   * @param <T> the list type
+   * @param list the list to be checked
+   * @return {@code false} if the list is not null and not empty; {@code true} otherwise
+   */
+  public static <T> boolean isNotEmpty(List<T> list) {
+    return list == null ? false : !list.isEmpty();
+  }
+
+  /**
+   * Checks if the {@code set} argument is not empty. It takes care of null arguments by returning {@code false}
+   * 
+   * @param <T> the set type
+   * @param set the set to be checked
+   * @return {@code false} if the set is not null and not empty; {@code true} otherwise
+   */
+  public static <T> boolean isNotEmpty(Set<T> set) {
+    return set == null ? false : !set.isEmpty();
+  }
+
+  /**
+   * Checks if the {@code array} argument is not empty. It takes care of null arguments by returning {@code false}
+   * 
+   * @param <T> the array type
+   * @param array the array to be checked
+   * @return {@code false} if the array is not null and not empty; {@code true} otherwise
+   */
+  public static <T> boolean isNotEmpty(T[] array) {
+    return array == null ? false : array.length != 0;
   }
 
   /*

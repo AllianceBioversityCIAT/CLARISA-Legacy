@@ -13,40 +13,41 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.exception;
+package org.cgiar.clarisa.dto;
 
+import java.util.Date;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
  **************/
 
-public class RefreshTokenException extends RuntimeException {
+public class APIErrorDTO<T> {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 4311586124225844509L;
+  private int statusCode;
+  private Date timestamp;
+  private T body;
+  private String path;
 
-  public static final String TOKEN_EXPIRED = "Refresh token %s is expired. Please make a new log-in request!";
-  public static final String TOKEN_NOT_FOUND = "Refresh token %s does not exist!";
-
-  public RefreshTokenException() {
-    super();
+  public APIErrorDTO(int statusCode, Date timestamp, T body, String path) {
+    this.statusCode = statusCode;
+    this.timestamp = timestamp;
+    this.body = body;
+    this.path = path;
   }
 
-  public RefreshTokenException(String token) {
-    this(TOKEN_EXPIRED, token);
+  public T getBody() {
+    return body;
   }
 
-  public RefreshTokenException(String message, String token) {
-    super(String.format(message, token));
+  public String getPath() {
+    return path;
   }
 
-  public RefreshTokenException(String message, Throwable cause) {
-    super(message, cause);
+  public int getStatusCode() {
+    return statusCode;
   }
 
-  public RefreshTokenException(Throwable cause) {
-    super(cause);
+  public Date getTimestamp() {
+    return timestamp;
   }
 }

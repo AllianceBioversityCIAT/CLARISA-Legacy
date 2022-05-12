@@ -13,40 +13,31 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.exception;
+package org.cgiar.clarisa.utils;
 
+import org.cgiar.clarisa.mapper.BaseMapper;
+import org.cgiar.clarisa.mapper.UserMapper;
+import org.cgiar.clarisa.model.User;
+
+import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
  **************/
 
-public class RefreshTokenException extends RuntimeException {
+@SpringBootTest
+@TestPropertySource({"classpath:config/clarisa-${spring.profiles.active:local}.properties"})
+public class MapperUtilsTests {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 4311586124225844509L;
-
-  public static final String TOKEN_EXPIRED = "Refresh token %s is expired. Please make a new log-in request!";
-  public static final String TOKEN_NOT_FOUND = "Refresh token %s does not exist!";
-
-  public RefreshTokenException() {
-    super();
-  }
-
-  public RefreshTokenException(String token) {
-    this(TOKEN_EXPIRED, token);
-  }
-
-  public RefreshTokenException(String message, String token) {
-    super(String.format(message, token));
-  }
-
-  public RefreshTokenException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
-  public RefreshTokenException(Throwable cause) {
-    super(cause);
+  @Test
+  public void testMapperResolver() {
+    BaseMapper<User, ?> userMapper = Mappers.getMapper(UserMapper.class);
+    BaseMapper<User, ?> userMapperInferred = MapperUtils.getMapper(User.class);
+    assertEquals(userMapper.getClass(), userMapperInferred.getClass());
   }
 }

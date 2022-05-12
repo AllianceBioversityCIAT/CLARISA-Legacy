@@ -17,13 +17,20 @@ package org.cgiar.clarisa.controller;
 
 import org.cgiar.clarisa.dto.BaseDTO;
 import org.cgiar.clarisa.exception.EntityNotFoundException;
+import org.cgiar.clarisa.manager.ClarisaAuditlogManager;
 import org.cgiar.clarisa.manager.GenericManager;
 import org.cgiar.clarisa.mapper.BaseMapper;
 import org.cgiar.clarisa.model.ClarisaBaseEntity;
+import org.cgiar.clarisa.model.User;
+import org.cgiar.clarisa.utils.AppConstants;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,6 +39,7 @@ import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -39,6 +47,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**************
  * @author German C. Martinez - CIAT/CCAFS
@@ -48,8 +57,15 @@ public abstract class GenericController<ENTITY extends ClarisaBaseEntity, DTO ex
 
   private Class<ENTITY> entityClass;
 
+  @Inject
+  private ClarisaAuditlogManager clarisaAuditlogManager;
+
   protected GenericController(Class<ENTITY> entityClass) {
     this.entityClass = Objects.requireNonNull(entityClass);
+  }
+
+  protected void addEntityClassToRequest(HttpServletRequest request) {
+    request.setAttribute(AppConstants.HTTP_ENTITY_CLASS_NAME, this.entityClass);
   }
 
   public DTO applyPatchToDTO(JsonPatch patch, DTO dto) throws JsonPatchException, JsonProcessingException {
@@ -65,37 +81,59 @@ public abstract class GenericController<ENTITY extends ClarisaBaseEntity, DTO ex
   }
 
   @GetMapping(value = "/count")
-  public ResponseEntity<Long> count() {
-    return ResponseEntity.ok(this.getManager().count());
+  public ResponseEntity<Long> count(HttpServletRequest request, HttpServletResponse response,
+    @AuthenticationPrincipal User user) {
+    this.addEntityClassToRequest(request);
+    Long count = this.getManager().count();
+    this.clarisaAuditlogManager.registerAuditlog(request, user, entityClass, true);
+    return ResponseEntity.ok(count);
   }
 
   @DeleteMapping(value = "/delete")
-  public void delete(@RequestBody DTO dto) {
+  public void delete(@RequestBody DTO dto, HttpServletRequest request, HttpServletResponse response,
+    @AuthenticationPrincipal User user) {
+    this.addEntityClassToRequest(request);
     ENTITY entity = this.getMapper().dtoToEntity(dto);
+    DTO toBeRemovedDTO = this.getMapper().entityToDto(entity);
     this.getManager().delete(entity);
+    this.clarisaAuditlogManager.registerAuditlog(request, user, entityClass, dto, toBeRemovedDTO, entity.getId(), true);
   }
 
   @DeleteMapping(value = "/delete/{id}")
-  public ResponseEntity<Boolean> deleteById(@PathVariable("id") Long id) {
+  public ResponseEntity<Boolean> deleteById(@PathVariable("id") Long id, HttpServletRequest request,
+    HttpServletResponse response, @AuthenticationPrincipal User user) {
+    this.addEntityClassToRequest(request);
+    ENTITY entity = this.getManager().findById(id).orElse(null);
+    DTO toBeRemovedDTO = this.getMapper().entityToDto(entity);
     this.getManager().deleteById(id);
+    this.clarisaAuditlogManager.registerAuditlog(request, user, entityClass, null, toBeRemovedDTO, id, true);
     return ResponseEntity.ok(!this.getManager().existsById(id));
   }
 
   @GetMapping(value = "/exists/{id}")
-  public ResponseEntity<Boolean> existsById(@PathVariable("id") Long id) {
+  public ResponseEntity<Boolean> existsById(@PathVariable("id") Long id, HttpServletRequest request,
+    HttpServletResponse response, @AuthenticationPrincipal User user) {
+    this.addEntityClassToRequest(request);
     Boolean exists = this.getManager().existsById(id);
+    this.clarisaAuditlogManager.registerAuditlog(request, user, entityClass, true);
     return ResponseEntity.ok(exists);
   }
 
   @GetMapping(value = "/all")
-  public ResponseEntity<List<DTO>> findAll() {
+  public ResponseEntity<List<DTO>> findAll(HttpServletRequest request, HttpServletResponse response,
+    @AuthenticationPrincipal User user) {
+    this.addEntityClassToRequest(request);
     List<ENTITY> entitys = this.getManager().findAll();
+    this.clarisaAuditlogManager.registerAuditlog(request, user, entityClass, true);
     return ResponseEntity.ok(this.getMapper().entityListToDtoList(entitys));
   }
 
   @GetMapping(value = "/get/{id}")
-  public ResponseEntity<DTO> findById(@PathVariable("id") Long id) {
+  public ResponseEntity<DTO> findById(@PathVariable("id") Long id, HttpServletRequest request,
+    HttpServletResponse response, @AuthenticationPrincipal User user) {
+    this.addEntityClassToRequest(request);
     ENTITY entity = this.getManager().findById(id).orElseThrow(() -> new EntityNotFoundException(this.entityClass, id));
+    this.clarisaAuditlogManager.registerAuditlog(request, user, entityClass, true);
     return ResponseEntity.ok(this.getMapper().entityToDto(entity));
   }
 
@@ -108,33 +146,54 @@ public abstract class GenericController<ENTITY extends ClarisaBaseEntity, DTO ex
   public abstract ObjectMapper getObjectMapper();
 
   @PatchMapping(value = "/patch/{id}")
-  public ResponseEntity<DTO> patch(@PathVariable("id") Long id, @RequestBody JsonPatch patch) {
+  public ResponseEntity<DTO> patch(@PathVariable("id") Long id, @RequestBody JsonPatch patch,
+    HttpServletRequest request, HttpServletResponse response, @AuthenticationPrincipal User user) {
+    this.addEntityClassToRequest(request);
     Optional<ENTITY> entityOptional = this.getManager().findById(id);
     if (entityOptional.isPresent()) {
       try {
         ENTITY entity = entityOptional.get();
+        DTO toBePatchedDTO = this.getMapper().entityToDto(entity);
         entity = this.applyPatchToEntity(patch, entity);
         entity = this.getManager().update(entity);
+        DTO patchedDTO = this.getMapper().entityToDto(entity);
+        this.clarisaAuditlogManager.registerAuditlog(request, user, entityClass, toBePatchedDTO, patchedDTO, id, true);
         return ResponseEntity.ok(this.getMapper().entityToDto(entity));
       } catch (JsonProcessingException | JsonPatchException e) {
         return ResponseEntity.unprocessableEntity().build();
       }
     } else {
+      this.clarisaAuditlogManager.registerAuditlog(request, user, entityClass, false);
       return ResponseEntity.badRequest().build();
     }
   }
 
   @PostMapping(value = "/save")
-  public ResponseEntity<DTO> save(@RequestBody DTO dto) {
+  public ResponseEntity<DTO> save(@RequestBody DTO dto, HttpServletRequest request, HttpServletResponse response,
+    @AuthenticationPrincipal User user) {
+    this.addEntityClassToRequest(request);
     ENTITY entity = this.getMapper().dtoToEntity(dto);
     entity = this.getManager().save(entity);
-    return ResponseEntity.ok(this.getMapper().entityToDto(entity));
+    DTO savedDTO = this.getMapper().entityToDto(entity);
+    this.clarisaAuditlogManager.registerAuditlog(request, user, entityClass, null, savedDTO, savedDTO.getId(), true);
+    return ResponseEntity.ok(savedDTO);
   }
 
   @PutMapping(value = "/update")
-  public ResponseEntity<DTO> update(@RequestBody DTO dto) {
-    ENTITY entity = this.getMapper().dtoToEntity(dto);
-    entity = this.getManager().update(entity);
-    return ResponseEntity.ok(this.getMapper().entityToDto(entity));
+  public ResponseEntity<DTO> update(@RequestBody DTO dto, HttpServletRequest request, HttpServletResponse response,
+    @AuthenticationPrincipal User user) {
+    this.addEntityClassToRequest(request);
+    ENTITY incoming = this.getMapper().dtoToEntity(dto);
+    DTO previousDTO = this.getMapper().entityToDto(this.getManager().findById(incoming.getId()).orElse(null));
+    ENTITY updated = this.getManager().update(incoming);
+    DTO updatedDTO = this.getMapper().entityToDto(updated);
+    this.clarisaAuditlogManager.registerAuditlog(request, user, entityClass, previousDTO, updatedDTO, updated.getId(),
+      true);
+    return ResponseEntity.ok(updatedDTO);
+  }
+
+  @RequestMapping("/user")
+  public User user(@AuthenticationPrincipal User user) {
+    return user;
   }
 }
