@@ -123,7 +123,9 @@ public class AuthorizationController {
       userAutenticationDTO.setRefreshToken(username);
     }
 
-    loginStatus = authenticator.authenticate(username, newUserAuthenticationDTO.getPassword());
+    if (userOptional.isPresent() && userOptional.get().getActive()) {
+      loginStatus = authenticator.authenticate(username, newUserAuthenticationDTO.getPassword());
+    }
 
     switch (loginStatus) {
       case LDAP_ERROR:
