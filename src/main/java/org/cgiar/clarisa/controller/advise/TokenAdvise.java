@@ -29,23 +29,18 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class TokenAdvise {
+public class TokenAdvise extends BaseAdvise<String, RefreshTokenException> {
 
-
+  @Override
   @ResponseBody
   @ExceptionHandler(value = RefreshTokenException.class)
   @ResponseStatus(HttpStatus.FORBIDDEN)
-  APIErrorDTO<String> handleTokenRefreshException(RefreshTokenException rte, HttpServletRequest request) {
-    String url = request.getServletPath();
-    String queryString = request.getQueryString();
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(url);
-    if (queryString != null) {
-      stringBuilder.append("?").append(queryString);
-    }
-
-    String requestUrl = stringBuilder.toString();
-    return new APIErrorDTO<String>(HttpStatus.FORBIDDEN.value(), new Date(), rte.getMessage(), requestUrl);
+  APIErrorDTO<String> handleException(RefreshTokenException rte, HttpServletRequest request) {
+    String requestUrl = this.getRequestedUrl(request);
+    APIErrorDTO<String> apiError =
+      new APIErrorDTO<String>(HttpStatus.FORBIDDEN.value(), new Date(), rte.getMessage(), requestUrl);
+    this.log(apiError, rte, request);
+    return apiError;
   }
 
 }
