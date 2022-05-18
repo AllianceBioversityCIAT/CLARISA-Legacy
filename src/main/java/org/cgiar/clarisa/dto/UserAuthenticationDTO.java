@@ -29,6 +29,8 @@ public class UserAuthenticationDTO extends BaseDTO {
 
   public String email;
 
+  public boolean isActive;
+
   public boolean authenticated;
 
   public String token;
@@ -52,6 +54,10 @@ public class UserAuthenticationDTO extends BaseDTO {
     return first_name;
   }
 
+  public boolean getIsActive() {
+    return isActive;
+  }
+
   public String getLast_name() {
     return last_name;
   }
@@ -72,10 +78,14 @@ public class UserAuthenticationDTO extends BaseDTO {
     return authenticated;
   }
 
+  public void setActive(boolean isActive) {
+    this.isActive = isActive;
+  }
+
+
   public void setAuthenticated(boolean authenticated) {
     this.authenticated = authenticated;
   }
-
 
   public void setEmail(String email) {
     this.email = email;
