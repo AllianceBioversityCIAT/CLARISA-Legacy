@@ -16,14 +16,9 @@
 package org.cgiar.clarisa.filters;
 
 import org.cgiar.clarisa.manager.ClarisaAuditlogManager;
-import org.cgiar.clarisa.model.ClarisaBaseEntity;
-import org.cgiar.clarisa.utils.AppConstants;
 import org.cgiar.clarisa.utils.auth.AuthHolder;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.UncheckedIOException;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.FilterChain;
@@ -31,13 +26,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.NestedServletException;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
@@ -57,44 +49,43 @@ public class ExceptionFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
     throws ServletException, IOException {
-    try {
-      filterChain.doFilter(request, response);
-    } catch (Exception e) {
-      if (e instanceof NestedServletException) {
-        Throwable cause = e.getCause();
-        if (cause instanceof RuntimeException) {
-          @SuppressWarnings({"unchecked"})
-          Class<? extends ClarisaBaseEntity> clazz =
-            (Class<? extends ClarisaBaseEntity>) request.getAttribute(AppConstants.HTTP_ENTITY_CLASS_NAME);
-
-          String httpMethod = request.getMethod();
-          HttpMethod method = HttpMethod.resolve(httpMethod);
-
-          // Gets the request body as a JSON for DELETE, PUT and POST request methods
-          Map<?, ?> requestAsJson = null;
-          switch (method) {
-            case POST:
-            case DELETE:
-            case PUT:
-            case PATCH:
-              try (Reader requestBody = request.getReader()) {
-                requestAsJson = new Gson().fromJson(requestBody, Map.class);
-              } catch (IOException e1) {
-                LOG.debug(e1.getMessage());
-                throw new UncheckedIOException(e1);
-              }
-              break;
-            default:
-              break;
-          }
-
-          LOG.info("an exception has occurred: {}", e.getMessage());
-          this.clarisaAuditlogManager.registerAuditlog(request, authHolder.getCurrentUser(), clazz, requestAsJson, null,
-            null, null, false, e);
-        }
-
-        throw e;
-      }
-    }
+    filterChain.doFilter(request, response);
+    /*
+     * try {
+     * filterChain.doFilter(request, response);
+     * } catch (Exception e) {
+     * if (e instanceof NestedServletException) {
+     * Throwable cause = e.getCause();
+     * if (cause instanceof RuntimeException) {
+     * @SuppressWarnings({"unchecked"})
+     * Class<? extends ClarisaBaseEntity> clazz =
+     * (Class<? extends ClarisaBaseEntity>) request.getAttribute(AppConstants.HTTP_ENTITY_CLASS_NAME);
+     * String httpMethod = request.getMethod();
+     * HttpMethod method = HttpMethod.resolve(httpMethod);
+     * // Gets the request body as a JSON for DELETE, PUT and POST request methods
+     * Map<?, ?> requestAsJson = null;
+     * switch (method) {
+     * case POST:
+     * case DELETE:
+     * case PUT:
+     * case PATCH:
+     * try (Reader requestBody = request.getReader()) {
+     * requestAsJson = new Gson().fromJson(requestBody, Map.class);
+     * } catch (IOException e1) {
+     * LOG.debug(e1.getMessage());
+     * throw new UncheckedIOException(e1);
+     * }
+     * break;
+     * default:
+     * break;
+     * }
+     * LOG.info("an exception has occurred: {}", e.getMessage());
+     * this.clarisaAuditlogManager.registerAuditlog(request, authHolder.getCurrentUser(), clazz, requestAsJson, null,
+     * null, null, false, e);
+     * }
+     * throw e;
+     * }
+     * }
+     */
   }
 }
