@@ -22,8 +22,6 @@ package org.cgiar.clarisa.dto;
 
 public class GlobalUnitDTO extends SimpleDTO {
 
-  private String name;
-
   private String acronym;
 
   private String officialCode;
@@ -35,38 +33,21 @@ public class GlobalUnitDTO extends SimpleDTO {
     return acronym;
   }
 
-
   public Boolean getActive() {
     return active;
   }
-
-
-  @Override
-  public String getName() {
-    return name;
-  }
-
 
   public String getOfficialCode() {
     return officialCode;
   }
 
-
   public void setAcronym(String acronym) {
     this.acronym = acronym;
   }
 
-
   public void setActive(Boolean active) {
     this.active = active;
   }
-
-
-  @Override
-  public void setName(String name) {
-    this.name = name;
-  }
-
 
   public void setOfficialCode(String officialCode) {
     this.officialCode = officialCode;

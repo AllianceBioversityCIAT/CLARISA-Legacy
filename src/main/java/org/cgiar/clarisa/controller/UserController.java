@@ -20,6 +20,7 @@
 package org.cgiar.clarisa.controller;
 
 import org.cgiar.clarisa.config.AppConfig;
+import org.cgiar.clarisa.config.LegacyPasswordEncoder;
 import org.cgiar.clarisa.dto.PasswordChangeDTO;
 import org.cgiar.clarisa.dto.SimpleDTO;
 import org.cgiar.clarisa.dto.UserDTO;
@@ -147,7 +148,7 @@ public class UserController extends GenericController<User, UserDTO> {
   @Override
   public ResponseEntity<UserDTO> save(@RequestBody UserDTO dto, HttpServletRequest request,
     HttpServletResponse response, @AuthenticationPrincipal User user) {
-    BCryptPasswordEncoder encoder = appConfig.getContext().getBean(BCryptPasswordEncoder.class);
+    LegacyPasswordEncoder encoder = appConfig.getContext().getBean(LegacyPasswordEncoder.class);
     dto.setPassword(encoder.encode(dto.getPassword()));
     return super.save(dto, request, response, user);
   }
