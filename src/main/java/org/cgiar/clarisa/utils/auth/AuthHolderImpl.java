@@ -29,6 +29,7 @@ public class AuthHolderImpl implements AuthHolder {
 
   @Override
   public User getCurrentUser() {
-    return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    return (user instanceof String ? null : (User) user);
   }
 }
