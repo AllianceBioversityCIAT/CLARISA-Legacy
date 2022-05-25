@@ -16,6 +16,7 @@
 package org.cgiar.clarisa.controller;
 
 import org.cgiar.clarisa.config.AppConfig;
+import org.cgiar.clarisa.config.LegacyPasswordEncoder;
 import org.cgiar.clarisa.dto.PasswordChangeDTO;
 import org.cgiar.clarisa.exception.UserNotFoundException;
 import org.cgiar.clarisa.manager.UserManager;
@@ -27,7 +28,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,7 +65,7 @@ public class AdminController {
     User previousUser = this.userManager.getUserByUsername(passwordChangeDTO.getUsername())
       .orElseThrow(() -> new UserNotFoundException());
 
-    BCryptPasswordEncoder encoder = appConfig.getContext().getBean(BCryptPasswordEncoder.class);
+    LegacyPasswordEncoder encoder = appConfig.getContext().getBean(LegacyPasswordEncoder.class);
     String newPassword = encoder.encode(passwordChangeDTO.getNewPassword());
 
     this.userManager.changePassword(newPassword, previousUser.getUsername());
