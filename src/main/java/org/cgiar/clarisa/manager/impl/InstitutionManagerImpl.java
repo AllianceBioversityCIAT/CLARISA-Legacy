@@ -55,8 +55,19 @@ public class InstitutionManagerImpl implements InstitutionManager {
   }
 
   @Override
+  public List<Institution> searchChildInstitutions(Long parent) {
+    return this.institutionDAO.searchChildInstitutions(parent);
+  }
+
+  @Override
   public List<Institution> searchInstitution(String searchValue) {
     return this.institutionDAO.searchInstitution(StringUtils.strip(searchValue));
   }
+
+  @Override
+  public List<Institution> searchInstitutionParent(Long parent) {
+    return this.institutionDAO.searchInstitutionParent(parent);
+  }
+
 
 }

@@ -13,27 +13,50 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.manager;
+/**************
+ * @author Diego Perez - Alliance Bioversity/CIAT
+ **************/
 
-import org.cgiar.clarisa.model.Institution;
+package org.cgiar.clarisa.dto;
 
 import java.util.List;
 
-/**************
- * @author German C. Martinez - CIAT/CCAFS
- **************/
+public class InstitutionParentDTO {
 
-public interface InstitutionManager extends GenericSoftDeleteableManager<Institution> {
+  private Long institutionId;
 
-  public List<Institution> searchChildInstitutions(Long parent);
+  private String institutionName;
 
-  /**
-   * Search an institution, given a search value
-   * 
-   * @param searchValue the search value
-   * @return a list of institutions, if any; else, null
-   */
-  public List<Institution> searchInstitution(String searchValue);
+  private List<InstitutionChildDTO> institutionChildList;
 
-  public List<Institution> searchInstitutionParent(Long parent);
+
+  public List<InstitutionChildDTO> getInstitutionChildList() {
+    return institutionChildList;
+  }
+
+
+  public Long getInstitutionId() {
+    return institutionId;
+  }
+
+
+  public String getInstitutionName() {
+    return institutionName;
+  }
+
+
+  public void setInstitutionChildList(List<InstitutionChildDTO> institutionChildList) {
+    this.institutionChildList = institutionChildList;
+  }
+
+
+  public void setInstitutionId(Long institutionId) {
+    this.institutionId = institutionId;
+  }
+
+
+  public void setInstitutionName(String institutionName) {
+    this.institutionName = institutionName;
+  }
+
 }

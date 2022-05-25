@@ -28,6 +28,10 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface InstitutionDAO extends JpaRepository<Institution, Long> {
 
+  @Query("select i from Institution i where i.parent is null and i.id!= ?1 and i.institutionParent.id is null ")
+  public List<Institution> searchChildInstitutions(Long parent);
+
+
   /**
    * Search an institution, given a search value
    * 
@@ -43,4 +47,7 @@ public interface InstitutionDAO extends JpaRepository<Institution, Long> {
     + "when i.websiteLink like concat('% %', ?1, '% %') then 5 when i.websiteLink like concat('%', ?1) then 8 "
     + "else 12 end), i.name, i.acronym, i.websiteLink")
   public List<Institution> searchInstitution(String searchValue);
+
+  @Query("select i from Institution i where i.institutionParent.id= ?1")
+  public List<Institution> searchInstitutionParent(Long parent);
 }

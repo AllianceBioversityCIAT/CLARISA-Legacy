@@ -15,8 +15,10 @@
 
 package org.cgiar.clarisa.controller;
 
+import org.cgiar.clarisa.dto.InstitutionChildDTO;
 import org.cgiar.clarisa.dto.InstitutionDTO;
 import org.cgiar.clarisa.dto.InstitutionLocationDTO;
+import org.cgiar.clarisa.dto.InstitutionParentDTO;
 import org.cgiar.clarisa.dto.SimpleDTO;
 import org.cgiar.clarisa.manager.GenericManager;
 import org.cgiar.clarisa.manager.InstitutionLocationManager;
@@ -109,6 +111,15 @@ public class InstitutionController extends GenericController<Institution, Instit
     return ResponseEntity.ok(this.mapper.entityListToSimpleDtoList(resultList));
   }
 
+  @GetMapping(value = "/childInstitutions/{id}")
+  public ResponseEntity<List<InstitutionDTO>> getChildnstitutions(@PathVariable("id") Long id) {
+    List<Institution> relatedList = manager.searchChildInstitutions(id);
+    if (relatedList != null) {
+      return ResponseEntity.ok(mapper.entityListToDtoList(relatedList));
+    }
+    return ResponseEntity.ok(null);
+  }
+
   @Override
   public Logger getClassLogger() {
     return InstitutionController.LOG;
@@ -127,6 +138,15 @@ public class InstitutionController extends GenericController<Institution, Instit
   @Override
   public ObjectMapper getObjectMapper() {
     return this.objectMapper;
+  }
+
+  @GetMapping(value = "/institutionParent/{institutionId}")
+  public ResponseEntity<List<InstitutionDTO>> getRelatedInstitutions(@PathVariable("institutionId") Long id) {
+    List<Institution> relatedList = manager.searchInstitutionParent(id);
+    if (relatedList != null) {
+      return ResponseEntity.ok(mapper.entityListToDtoList(relatedList));
+    }
+    return ResponseEntity.ok(null);
   }
 
   @Override
@@ -207,6 +227,79 @@ public class InstitutionController extends GenericController<Institution, Instit
       return null;
     }
     return ResponseEntity.ok(mapper.entityToDto(institution));
+  }
+
+  @PostMapping(value = "/updateparent")
+  public ResponseEntity<InstitutionParentDTO> updateParent(@RequestBody InstitutionParentDTO dto) {
+    if (dto.getInstitutionId() != null) {
+      InstitutionChildDTO dtoChild;
+      InstitutionParentDTO parent;
+      List<InstitutionChildDTO> dtoChildList = new ArrayList<InstitutionChildDTO>();
+      Institution institution = manager.findById(dto.getInstitutionId()).orElse(null);
+      List<Institution> institutionChildsToBeDeleted = new ArrayList<>();
+      if (institution != null) {
+        List<Institution> institutionChilds = manager.searchInstitutionParent(dto.getInstitutionId());
+        // disable the existing ones as child from parent
+        for (InstitutionChildDTO childDTO : dto.getInstitutionChildList()) {
+          Institution institutionchild = manager.findById(childDTO.getInstitutionId()).orElse(null);
+          if (institutionchild != null) {
+            boolean found = false;
+            for (Institution child : institutionChilds) {
+              if (child.getId().longValue() == institutionchild.getId().longValue()) {
+                found = true;
+              }
+            }
+            if (!found) {
+              institutionchild.setParent(false);
+              institutionchild.setInstitutionParent(institution);
+              institutionchild = manager.save(institutionchild);
+            }
+          }
+          if (!institutionchild.getParent()) {
+            dtoChild = new InstitutionChildDTO();
+            dtoChild.setInstitutionId(institutionchild.getId());
+            dtoChild.setInstitutionName(institutionchild.getName());
+            dtoChild.setInstitutionWebsite(institutionchild.getWebsiteLink());
+            dtoChild.setActive(true);
+            dtoChildList.add(dtoChild);
+          }
+        }
+
+        for (Institution child : institutionChilds) {
+          boolean found = false;
+          for (InstitutionChildDTO childDTO : dto.getInstitutionChildList()) {
+            if (child.getId().longValue() == childDTO.getInstitutionId().longValue()) {
+              found = true;
+            }
+          }
+          if (!found) {
+            institutionChildsToBeDeleted.add(child);
+            dtoChild = new InstitutionChildDTO();
+            dtoChild.setInstitutionId(child.getId());
+            dtoChild.setInstitutionName(child.getName());
+            dtoChild.setInstitutionWebsite(child.getWebsiteLink());
+            dtoChild.setActive(false);
+            dtoChildList.add(dtoChild);
+          }
+        }
+        for (Institution inst : institutionChildsToBeDeleted) {
+          Institution institutionchild = manager.findById(inst.getId()).orElse(null);
+          institutionchild.setInstitutionParent(null);
+          institutionchild.setParent(null);
+          institutionchild = manager.save(institutionchild);
+        }
+
+        parent = new InstitutionParentDTO();
+        parent.setInstitutionId(institution.getId());
+        parent.setInstitutionName(institution.getName());
+        parent.setInstitutionChildList(dtoChildList);
+        return ResponseEntity.ok(parent);
+      }
+
+    } else {
+      return null;
+    }
+    return null;
   }
 
 }
