@@ -19,6 +19,7 @@ import java.util.List;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
+ * @author Diego Perez - Alliance Bioversity/CIAT
  **************/
 
 public class InstitutionDTO extends SimpleDTO {
@@ -29,6 +30,8 @@ public class InstitutionDTO extends SimpleDTO {
 
   private List<InstitutionLocationDTO> locations;
 
+  private Boolean active;
+
 
   public InstitutionDTO() {
   }
@@ -36,6 +39,11 @@ public class InstitutionDTO extends SimpleDTO {
 
   public String getAcronym() {
     return acronym;
+  }
+
+
+  public Boolean getActive() {
+    return active;
   }
 
 
@@ -48,12 +56,17 @@ public class InstitutionDTO extends SimpleDTO {
     return locations;
   }
 
+
   public String getWebsiteLink() {
     return websiteLink;
   }
 
   public void setAcronym(String acronym) {
     this.acronym = acronym;
+  }
+
+  public void setActive(Boolean active) {
+    this.active = active;
   }
 
 

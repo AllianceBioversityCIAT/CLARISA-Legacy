@@ -35,7 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 @Entity
 @Table(name = "institutions")
 @NamedQuery(name = "Institution.findAll", query = "SELECT i FROM Institution i")
-public class Institution extends ClarisaBaseEntity implements java.io.Serializable {
+public class Institution extends SoftDeleteableEntity implements java.io.Serializable {
 
   private static final long serialVersionUID = 3635585962414755020L;
 
@@ -54,13 +54,17 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
   @Expose
   private Date added;
 
+  private Institution institutionParent;
+
+  private Boolean parent;
+
+
   // relations
   private List<InstitutionLocation> institutionLocations;
 
 
   public Institution() {
   }
-
 
   public void addLocElement(LocElement loc, Boolean headquarters) {
     if (institutionLocations == null) {
@@ -70,6 +74,7 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
     institutionLocations.add(instLoc);
     loc.getLocElementInstitutions().add(instLoc);
   }
+
 
   @Override
   public boolean equals(Object obj) {
@@ -101,6 +106,7 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
     return this.added;
   }
 
+
   @Transient
   public String getComposedName() {
     return (this.acronym != null ? (StringUtils.trim(this.acronym) + " - ") : "") + StringUtils.trim(this.getName());
@@ -111,6 +117,13 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
     return institutionLocations;
   }
 
+  @ManyToOne(fetch = FetchType.LAZY, optional = true)
+  @JoinColumn(name = "parent_id")
+  public Institution getInstitutionParent() {
+    return institutionParent;
+  }
+
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "institution_type_id")
   public InstitutionType getInstitutionType() {
@@ -120,6 +133,11 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
   @Column
   public String getName() {
     return this.name;
+  }
+
+  @Column(name = "is_parent")
+  public Boolean getParent() {
+    return parent;
   }
 
   @Column(name = "website_link")
@@ -140,7 +158,6 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
     }
   }
 
-
   public void setAcronym(String acronym) {
     this.acronym = acronym;
   }
@@ -149,8 +166,13 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
     this.added = added;
   }
 
+
   public void setInstitutionLocations(List<InstitutionLocation> institutionLocations) {
     this.institutionLocations = institutionLocations;
+  }
+
+  public void setInstitutionParent(Institution institutionParent) {
+    this.institutionParent = institutionParent;
   }
 
   public void setInstitutionType(InstitutionType institutionType) {
@@ -159,6 +181,10 @@ public class Institution extends ClarisaBaseEntity implements java.io.Serializab
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public void setParent(Boolean parent) {
+    this.parent = parent;
   }
 
   public void setWebsiteLink(String websiteLink) {
