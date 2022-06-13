@@ -20,6 +20,7 @@
 package org.cgiar.clarisa.controller;
 
 import org.cgiar.clarisa.config.AppConfig;
+import org.cgiar.clarisa.config.LegacyPasswordEncoder;
 import org.cgiar.clarisa.dto.PasswordChangeDTO;
 import org.cgiar.clarisa.dto.SimpleDTO;
 import org.cgiar.clarisa.dto.UserDTO;
@@ -45,7 +46,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -147,7 +147,7 @@ public class UserController extends GenericController<User, UserDTO> {
   @Override
   public ResponseEntity<UserDTO> save(@RequestBody UserDTO dto, HttpServletRequest request,
     HttpServletResponse response, @AuthenticationPrincipal User user) {
-    BCryptPasswordEncoder encoder = appConfig.getContext().getBean(BCryptPasswordEncoder.class);
+    LegacyPasswordEncoder encoder = appConfig.getContext().getBean(LegacyPasswordEncoder.class);
     dto.setPassword(encoder.encode(dto.getPassword()));
     return super.save(dto, request, response, user);
   }
@@ -159,7 +159,7 @@ public class UserController extends GenericController<User, UserDTO> {
     if (StringUtils.isEmpty(dto.getPassword())) {
       dto.setPassword(previousUser.getPassword());
     } else {
-      BCryptPasswordEncoder encoder = appConfig.getContext().getBean(BCryptPasswordEncoder.class);
+      LegacyPasswordEncoder encoder = appConfig.getContext().getBean(LegacyPasswordEncoder.class);
       dto.setPassword(encoder.encode(dto.getPassword()));
     }
     return super.update(dto, request, response, user);
@@ -175,7 +175,7 @@ public class UserController extends GenericController<User, UserDTO> {
     User previousUser =
       this.manager.getUserByUsername(passwordChangeDTO.getUsername()).orElseThrow(() -> new UserNotFoundException());
 
-    BCryptPasswordEncoder encoder = appConfig.getContext().getBean(BCryptPasswordEncoder.class);
+    LegacyPasswordEncoder encoder = appConfig.getContext().getBean(LegacyPasswordEncoder.class);
     String newPassword = encoder.encode(passwordChangeDTO.getNewPassword());
 
     this.manager.changePassword(newPassword, previousUser.getUsername());

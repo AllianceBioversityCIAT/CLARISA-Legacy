@@ -13,23 +13,37 @@
  * along with CLARISA. If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************/
 
-package org.cgiar.clarisa.utils.auth;
+package org.cgiar.clarisa.dto;
 
-import org.cgiar.clarisa.model.User;
-
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 
 /**************
  * @author German C. Martinez - Alliance Bioversity/CIAT
  **************/
 
-@Component
-public class AuthHolderImpl implements AuthHolder {
+public class UserRoleDTO {
 
-  @Override
-  public User getCurrentUser() {
-    Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    return (user instanceof String ? null : (User) user);
+  private Long userId;
+  private Long roleId;
+
+
+  public UserRoleDTO() {
+  }
+
+
+  public Long getRoleId() {
+    return roleId;
+  }
+
+  public Long getUserId() {
+    return userId;
+  }
+
+
+  public void setRoleId(Long roleId) {
+    this.roleId = roleId;
+  }
+
+  public void setUserId(Long userId) {
+    this.userId = userId;
   }
 }

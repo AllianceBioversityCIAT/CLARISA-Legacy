@@ -149,7 +149,7 @@ public class ClarisaAuditlogManagerImpl implements ClarisaAuditlogManager {
 
     monitoring.setWasSuccessful(successful);
     monitoring
-      .setFailingCause(successful ? (failingCause != null ? ExceptionUtils.getStackTrace(failingCause) : null) : null);
+      .setFailingCause(successful ? null : (failingCause != null ? ExceptionUtils.getStackTrace(failingCause) : null));
 
     // Save the information to Clarisa Monitoring Table
     monitoring = this.save(monitoring);

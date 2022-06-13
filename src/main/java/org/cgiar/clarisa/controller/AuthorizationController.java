@@ -26,11 +26,14 @@ import org.cgiar.clarisa.dto.RefreshTokenDTO;
 import org.cgiar.clarisa.dto.RefreshTokenRequestDTO;
 import org.cgiar.clarisa.dto.UserAuthenticationDTO;
 import org.cgiar.clarisa.exception.RefreshTokenException;
+import org.cgiar.clarisa.manager.ClarisaAuditlogManager;
 import org.cgiar.clarisa.manager.RefreshTokenManager;
 import org.cgiar.clarisa.manager.UserManager;
 import org.cgiar.clarisa.mapper.RoleMapper;
+import org.cgiar.clarisa.model.ClarisaBaseEntity;
 import org.cgiar.clarisa.model.RefreshToken;
 import org.cgiar.clarisa.model.User;
+import org.cgiar.clarisa.utils.AppConstants;
 import org.cgiar.clarisa.utils.JwtUtils;
 import org.cgiar.clarisa.utils.auth.Authenticator;
 import org.cgiar.clarisa.utils.auth.DatabaseAuthenticator;
@@ -40,6 +43,7 @@ import org.cgiar.clarisa.utils.auth.LoginStatus;
 import java.util.Optional;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -59,6 +63,7 @@ public class AuthorizationController {
 
   private UserManager userManager;
   private RefreshTokenManager refreshTokenManager;
+  private ClarisaAuditlogManager clarisaAuditlogManager;
 
   private RoleMapper roleMapper;
 
@@ -68,21 +73,30 @@ public class AuthorizationController {
 
   @Inject
   public AuthorizationController(UserManager userManager, JwtUtils jwtTokenUtils, AppConfig appConfig,
-    RoleMapper roleMapper, RefreshTokenManager refreshTokenManager) {
+    RoleMapper roleMapper, RefreshTokenManager refreshTokenManager, ClarisaAuditlogManager clarisaAuditlogManager) {
     super();
     this.userManager = userManager;
     this.jwtTokenUtils = jwtTokenUtils;
     this.appConfig = appConfig;
     this.roleMapper = roleMapper;
     this.refreshTokenManager = refreshTokenManager;
+    this.clarisaAuditlogManager = clarisaAuditlogManager;
+  }
+
+  void addEntityClassToRequest(HttpServletRequest request, Class<? extends ClarisaBaseEntity> clazz) {
+    request.setAttribute(AppConstants.HTTP_ENTITY_CLASS_NAME, clazz);
   }
 
   @PostMapping("/refreshToken")
-  public ResponseEntity<RefreshTokenDTO> refreshtoken(@RequestBody RefreshTokenRequestDTO previousTokenObject) {
+  public ResponseEntity<RefreshTokenDTO> refreshtoken(HttpServletRequest request,
+    @RequestBody RefreshTokenRequestDTO previousTokenObject) {
+    Class<RefreshToken> thisClazz = RefreshToken.class;
+    this.addEntityClassToRequest(request, RefreshToken.class);
     String previousToken = previousTokenObject.getRefreshToken();
     return refreshTokenManager.findFromToken(previousToken).map(refreshTokenManager::verifyExpiration)
       .map(RefreshToken::getUser).map(user -> {
         String token = jwtTokenUtils.generateJWTToken(user);
+        this.clarisaAuditlogManager.registerAuditlog(request, user, thisClazz, previousTokenObject, null, null, true);
         return ResponseEntity.ok(new RefreshTokenDTO(token, previousToken));
       }).orElseThrow(() -> new RefreshTokenException(RefreshTokenException.TOKEN_NOT_FOUND, previousToken));
   }
@@ -118,6 +132,7 @@ public class AuthorizationController {
       userAutenticationDTO.setEmail(user.getEmail());
       userAutenticationDTO.setFirst_name(user.getFirstName());
       userAutenticationDTO.setLast_name(user.getLastName());
+      userAutenticationDTO.setActive(user.getActive());
       userAutenticationDTO.setId(user.getId());
 
     }
