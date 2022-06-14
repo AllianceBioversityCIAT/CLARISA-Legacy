@@ -52,10 +52,6 @@ public class UserDTO extends SimpleDTO {
     return firstName;
   }
 
-  public boolean getIsActive() {
-    return isActive;
-  }
-
   public String getLastName() {
     return lastName;
   }
@@ -72,6 +68,14 @@ public class UserDTO extends SimpleDTO {
     return username;
   }
 
+  public boolean isActive() {
+    return isActive;
+  }
+
+
+  public void setActive(boolean isActive) {
+    this.isActive = isActive;
+  }
 
   public void setCgiarUser(boolean isCgiarUser) {
     this.cgiarUser = isCgiarUser;
@@ -83,10 +87,6 @@ public class UserDTO extends SimpleDTO {
 
   public void setFirstName(String firstName) {
     this.firstName = firstName;
-  }
-
-  public void setIsActive(boolean isActive) {
-    this.isActive = isActive;
   }
 
   public void setLastName(String lastName) {
