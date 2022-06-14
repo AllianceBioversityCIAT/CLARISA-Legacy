@@ -33,7 +33,7 @@ public interface UserMapper extends SimpleBaseMapper<User, UserDTO> {
 
   @Override
   @Mappings({@Mapping(target = "name", expression = "java(entity.getComposedName())"),
-    @Mapping(target = "isActive", source = "active"), @Mapping(target = "roleList", source = "userRoles"),
+    @Mapping(target = "active", source = "active"), @Mapping(target = "roleList", source = "userRoles"),
     @Mapping(ignore = true, target = "password")})
   public UserDTO entityToDto(User entity);
 
